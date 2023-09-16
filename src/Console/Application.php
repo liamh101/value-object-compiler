@@ -15,6 +15,4 @@ class Application extends BaseApplication
 
         $this->add(new GenerateFromJson());
     }
-
-
 }
