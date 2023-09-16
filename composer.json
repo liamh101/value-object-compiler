@@ -1,0 +1,22 @@
+{
+    "name": "liamh101/valueobjectgenerator",
+    "description": "Generate Value Objects from JSON and XML",
+    "autoload": {
+        "psr-4": {
+            "LiamH\\Valueobjectgenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Liam Hackett"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "symfony/console": "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "bin": ["ValueObjectGenerator"]
+}

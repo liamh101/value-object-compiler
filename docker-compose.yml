@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  php-8.2: &php
+    build:
+      args:
+        PHP_VERSION: "8.2"
+        PHP_XDEBUG_VERSION: "3.1.2"
+    working_dir: /app
+    volumes:
+      - .:/app
