@@ -11,4 +11,17 @@ enum ParameterType: string
     case OBJECT = 'object';
     case NULL = 'NULL';
     case BOOLEAN = 'boolean';
+
+    public function getDefinitionName(): string
+    {
+        return match($this) {
+            self::STRING => 'string',
+            self::INTEGER => 'int',
+            self::FLOAT => 'double',
+            self::ARRAY => 'array',
+            self::OBJECT => '',
+            self::NULL => '?',
+            self::BOOLEAN => 'bool',
+        };
+    }
 }
