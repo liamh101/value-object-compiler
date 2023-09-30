@@ -41,7 +41,7 @@ readonly class DecodedObject
         foreach ($this->parameters as $parameter) {
             if (is_array($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
-                $docblock .= '\n@var ';
+                $docblock .= '\n*@var ';
 
                 foreach ($parameter->arrayTypes as $key => $type) {
                     if ($key > 0) {
