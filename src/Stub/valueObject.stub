@@ -1,0 +1,12 @@
+<?php
+
+readonly class {{ClassName}}
+{
+
+    {{Docblock}}
+    public function __construct(
+        {{Parameters}}
+    ) {
+    }
+
+}
