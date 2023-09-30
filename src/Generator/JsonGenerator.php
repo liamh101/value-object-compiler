@@ -85,7 +85,6 @@ class JsonGenerator
                 if ($object->types[0] === ParameterType::OBJECT) {
                     $objects[] = $object;
                 }
-
             }
         }
 
@@ -99,7 +98,12 @@ class JsonGenerator
         }
 
         if (count($objects) === 1) {
-            return $objects[0];
+            return new ObjectParameter(
+                originalName: $originalName,
+                formattedName: $formattedName,
+                types: [ParameterType::ARRAY],
+                arrayTypes: $objects,
+            );
         }
 
         $refinedObject = $this->reduceObjects(array_map(static fn (ObjectParameter $objectParameter) => $objectParameter->subObject, $objects));
@@ -149,12 +153,16 @@ class JsonGenerator
                 }
 
                 if (count($parameter->types) === 1 && $parameter->types[0] === ParameterType::OBJECT) {
-//                    die('Reduce with master');
+                    $subObject = $this->reduceObjects([$parameter->subObject, $masterParameters[$parameterName]->subObject]);
+                    $masterParameters[$parameterName] = new ObjectParameter(
+                        originalName: $parameter->originalName,
+                        formattedName: $parameter->formattedName,
+                        types: $parameter->types,
+                        subObject: $subObject,
+                        arrayTypes: $parameter->arrayTypes,
+                    );
+                    continue;
                 }
-
-//                if (count(array_intersect($masterParameters[$parameterName]->types, $parameter->types)) === count($parameter->types)) {
-//                    continue;
-//                }
 
                 $newTypes = $parameter->types;
 
