@@ -8,6 +8,7 @@ readonly class ObjectParameter
 {
     /**
      * @param ParameterType[] $types
+     * @param ParameterType[]|DecodedObject[] $arrayTypes
      */
     public function __construct(
         public string $originalName,
@@ -21,5 +22,49 @@ readonly class ObjectParameter
     public function hasType(ParameterType $type): bool
     {
         return in_array($type, $this->types, true);
+    }
+
+    public function hasObject(): bool
+    {
+        if ($this->subObject && $this->hasType(ParameterType::OBJECT)) {
+            return true;
+        }
+
+        if ($this->hasType(ParameterType::ARRAY)) {
+            foreach($this->arrayTypes as $arrayType) {
+
+                if ($arrayType instanceof DecodedObject) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return DecodedObject[]
+     */
+    public function getObjects(): array
+    {
+        $objects = [];
+
+        if (!$this->hasObject()) {
+            return $objects;
+        }
+
+        if ($this->subObject && $this->hasType(ParameterType::OBJECT)) {
+            $objects[] = $this->subObject;
+        }
+
+        if ($this->hasType(ParameterType::ARRAY)) {
+            foreach($this->arrayTypes as $arrayType) {
+                if ($arrayType instanceof DecodedObject) {
+                    $objects[] = $arrayType;
+                }
+            }
+        }
+
+        return $objects;
     }
 }
