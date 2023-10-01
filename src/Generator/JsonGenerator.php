@@ -83,7 +83,7 @@ class JsonGenerator
                 }
 
                 if ($object->types[0] === ParameterType::OBJECT) {
-                    $objects[] = $object;
+                    $objects[] = $object->subObject;
                 }
             }
         }
@@ -106,7 +106,7 @@ class JsonGenerator
             );
         }
 
-        $refinedObject = $this->reduceObjects(array_map(static fn (ObjectParameter $objectParameter) => $objectParameter->subObject, $objects));
+        $refinedObject = $this->reduceObjects($objects);
 
         return new ObjectParameter(
             originalName: $originalName,
