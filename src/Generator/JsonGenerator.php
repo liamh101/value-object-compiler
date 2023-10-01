@@ -167,10 +167,17 @@ class JsonGenerator
                 }
 
                 $newTypes = $parameter->types;
+                $newArrayTypes = $parameter->arrayTypes;
 
                 foreach ($masterParameters[$parameterName]->types as $type) {
                     if (!in_array($type, $newTypes, true)) {
                         $newTypes[] = $type;
+                    }
+                }
+
+                foreach ($masterParameters[$parameterName]->arrayTypes as $arrayType) {
+                    if (!in_array($arrayType, $newArrayTypes, true)) {
+                        $newArrayTypes[] = $arrayType;
                     }
                 }
 
@@ -179,7 +186,7 @@ class JsonGenerator
                     formattedName: $parameter->formattedName,
                     types: $newTypes,
                     subObject: $parameter->subObject,
-                    arrayTypes: $parameter->arrayTypes,
+                    arrayTypes: $newArrayTypes,
                 );
             }
 
