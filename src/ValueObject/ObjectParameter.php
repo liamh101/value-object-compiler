@@ -30,7 +30,7 @@ readonly class ObjectParameter
             return true;
         }
 
-        if ($this->hasType(ParameterType::ARRAY)) {
+        if (is_array($this->arrayTypes) && $this->hasType(ParameterType::ARRAY)) {
             foreach ($this->arrayTypes as $arrayType) {
                 if ($arrayType instanceof DecodedObject) {
                     return true;
@@ -56,7 +56,7 @@ readonly class ObjectParameter
             $objects[] = $this->subObject;
         }
 
-        if ($this->hasType(ParameterType::ARRAY)) {
+        if (is_array($this->arrayTypes) && $this->hasType(ParameterType::ARRAY)) {
             foreach ($this->arrayTypes as $arrayType) {
                 if ($arrayType instanceof DecodedObject) {
                     $objects[] = $arrayType;

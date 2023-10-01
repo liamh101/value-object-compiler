@@ -9,6 +9,7 @@ class FileService
 {
     private const STUB_LOCATION = 'src/Stub/';
 
+    /** @var string[] */
     private array $cacheFiles = [];
 
     public function populateValueObjectFile(DecodedObject $object): string

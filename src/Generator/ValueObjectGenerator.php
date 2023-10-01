@@ -7,6 +7,7 @@ use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 
 class ValueObjectGenerator
 {
+    /** @var DecodedObject[] */
     private array $availableObjects = [];
 
     public function __construct(

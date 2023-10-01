@@ -66,7 +66,7 @@ readonly class DecodedObject
                     $parameters .= '|';
                 }
 
-                if ($type === ParameterType::OBJECT) {
+                if ($type === ParameterType::OBJECT && $requiredParameter->subObject) {
                     $parameters .= $requiredParameter->subObject->name;
                 }
 
@@ -94,7 +94,7 @@ readonly class DecodedObject
                     $hasArray = true;
                 }
 
-                if ($type === ParameterType::OBJECT) {
+                if ($type === ParameterType::OBJECT && $optionalParameter->subObject) {
                     $parameters .= $optionalParameter->subObject->name;
                 }
 
