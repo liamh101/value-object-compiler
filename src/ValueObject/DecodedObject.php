@@ -33,6 +33,89 @@ readonly class DecodedObject
         return $objects;
     }
 
+    /**
+     * @return ObjectParameter[]
+     */
+    public function getRequiredParameters(): array
+    {
+        $requiredParameters = array_filter($this->parameters, static fn (ObjectParameter $objectParameter) => !$objectParameter->hasType(ParameterType::NULL));
+        ksort($requiredParameters);
+
+        return $requiredParameters;
+    }
+
+    /**
+     * @return ObjectParameter[]
+     */
+    public function getOptionalParameters(): array
+    {
+        $optionalParameters = array_filter($this->parameters, static fn (ObjectParameter $objectParameter) => $objectParameter->hasType(ParameterType::NULL));
+        ksort($optionalParameters);
+
+        return $optionalParameters;
+    }
+
+    public function generateParameters(): string
+    {
+        $parameters = '';
+
+        foreach ($this->getRequiredParameters() as $requiredParameter) {
+            $parameters .= 'public ';
+
+            foreach ($requiredParameter->types as $key => $type) {
+                if ($key > 0) {
+                    $parameters .= '|';
+                }
+
+                if ($type === ParameterType::OBJECT) {
+                    $parameters .= $requiredParameter->subObject->name;
+                }
+
+                $parameters .= $type->getDefinitionName();
+            }
+
+            $parameters .= ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
+        }
+
+        foreach ($this->getOptionalParameters() as $optionalParameter) {
+            $parameters .= 'public ';
+            $multipleTypes = false;
+            $hasArray = false;
+
+            foreach ($optionalParameter->types as $type) {
+                if ($type === ParameterType::NULL) {
+                    continue;
+                }
+
+                if ($multipleTypes) {
+                    $parameters .= '|';
+                }
+
+                if ($type === ParameterType::ARRAY) {
+                    $hasArray = true;
+                }
+
+                if ($type === ParameterType::OBJECT) {
+                    $parameters .= $optionalParameter->subObject->name;
+                }
+
+                $parameters .= $type->getDefinitionName();
+                $multipleTypes = true;
+            }
+
+            $parameters .= ' $' . $optionalParameter->formattedName;
+
+            if ($hasArray) {
+                $parameters .= ' = [],' . PHP_EOL;
+                continue;
+            }
+
+            $parameters .= ' = null,' . PHP_EOL;
+        }
+
+        return $parameters;
+    }
+
     public function generateDocblock(): string
     {
         $hasDocblock = false;
@@ -41,7 +124,7 @@ readonly class DecodedObject
         foreach ($this->parameters as $parameter) {
             if (is_array($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
-                $docblock .= '\n*@var ';
+                $docblock .= PHP_EOL . '*@var ';
 
                 foreach ($parameter->arrayTypes as $key => $type) {
                     if ($key > 0) {
@@ -66,7 +149,7 @@ readonly class DecodedObject
             return '';
         }
 
-        $docblock .= '/n**';
+        $docblock .= PHP_EOL . '**';
         return $docblock;
     }
 }

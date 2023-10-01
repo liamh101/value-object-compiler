@@ -16,11 +16,13 @@ class FileService
         return str_replace(
             [
                 '{{ClassName}}',
-                '{{Docblock}}'
+                '{{Docblock}}',
+                '{{Parameters}}',
             ],
             [
                 $object->name,
-                $object->generateDocblock()
+                $object->generateDocblock(),
+                $object->generateParameters(),
             ],
             $this->getValueObjectFile()
         );
