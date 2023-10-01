@@ -67,7 +67,9 @@ class JsonGenerator
         foreach ($arrayValue as $value) {
             $parameter = ParameterType::from(gettype($value));
 
-            $types[] = $parameter;
+            if (!in_array($parameter, $types, true)) {
+                $types[] = $parameter;
+            }
 
             if ($parameter === ParameterType::ARRAY) {
                 $object = $this->handleArrayType(
