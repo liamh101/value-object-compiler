@@ -8,7 +8,6 @@ use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
 class JsonGenerator
 {
-
     public function generateClassFromSource(string $parentName, string $rawJson): DecodedObject
     {
         $formattedJson = json_decode($rawJson, true, 512, JSON_THROW_ON_ERROR);
@@ -133,7 +132,7 @@ class JsonGenerator
             foreach ($decodedObject->parameters as $parameterName => $parameter) {
                 $foundPara = array_search($parameterName, $decodedObjects, true);
 
-                if (!$foundPara !== false){
+                if (!$foundPara !== false) {
                     unset($duplicateKeys[$foundPara]);
                 }
 
@@ -210,7 +209,6 @@ class JsonGenerator
                     arrayTypes: $duplicateObject->arrayTypes,
                 );
             }
-
         }
 
         return new DecodedObject(

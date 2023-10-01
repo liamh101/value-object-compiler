@@ -33,7 +33,7 @@ class ValueObjectGenerator
         }
 
         foreach ($decodedObject->getChildObjects() as $child) {
-           $this->addObject($child);
+            $this->addObject($child);
         }
     }
 }

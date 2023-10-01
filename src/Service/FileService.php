@@ -37,12 +37,11 @@ class FileService
         $contents = file_get_contents(self::STUB_LOCATION . 'valueObject.stub');
 
         if (!$contents) {
-            throw FileException::FileNotFound('valueObject.stub');
+            throw FileException::fileNotFound('valueObject.stub');
         }
 
         $this->cacheFiles['valueObject'] = $contents;
 
         return $contents;
     }
-
 }

@@ -6,7 +6,6 @@ use LiamH\Valueobjectgenerator\Enum\ParameterType;
 
 readonly class DecodedObject
 {
-
     /**
      * @param string $name
      * @param ObjectParameter[] $parameters

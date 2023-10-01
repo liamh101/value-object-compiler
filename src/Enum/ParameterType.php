@@ -14,7 +14,7 @@ enum ParameterType: string
 
     public function getDefinitionName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::STRING => 'string',
             self::INTEGER => 'int',
             self::FLOAT => 'double',

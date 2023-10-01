@@ -2,10 +2,12 @@
 
 namespace LiamH\Valueobjectgenerator\Exception;
 
-class FileException extends \Exception
+use Exception;
+
+final class FileException extends Exception
 {
-    public static function FileNotFound(string $filename): self
+    public static function fileNotFound(string $filename): self
     {
-        return new static('File ' . $filename . ' could not be found.');
+        return new FileException('File ' . $filename . ' could not be found.');
     }
 }
