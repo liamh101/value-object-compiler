@@ -9,4 +9,16 @@ readonly class {{ClassName}}
     ) {
     }
 
+    /**
+    * @return self[]
+    */
+    public static function hydrateMany(array $data): array
+    {
+
+    }
+
+    public static function hydrate(array $data): self
+    {
+        return new self({{HydrationLogic}});
+    }
 }

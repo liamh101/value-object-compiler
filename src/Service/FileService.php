@@ -19,11 +19,13 @@ class FileService
                 '{{ClassName}}',
                 '{{Docblock}}',
                 '{{Parameters}}',
+                '{{HydrationLogic}}'
             ],
             [
                 $object->name,
                 $object->generateDocblock(),
                 $object->generateParameters(),
+                $object->generateHydrationLogic(),
             ],
             $this->getValueObjectFile()
         );

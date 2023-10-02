@@ -115,6 +115,27 @@ readonly class DecodedObject
         return $parameters;
     }
 
+    public function generateHydrationLogic(): string
+    {
+        $hydrationLogic = '';
+
+        foreach ($this->getRequiredParameters() as $requiredParameter) {
+            if ($requiredParameter->subObject && $requiredParameter->hasType(ParameterType::OBJECT)) {
+                $hydrationLogic .= $requiredParameter->formattedName . ': ' . $requiredParameter->subObject->name . '::hydrate($data[\'' . $requiredParameter->originalName . '\']),' . PHP_EOL;
+                continue;
+            }
+
+            if ($requiredParameter->hasType(ParameterType::ARRAY) && $requiredParameter->arrayTypes[0] instanceof DecodedObject) {
+                $hydrationLogic .= $requiredParameter->formattedName . ': ' . $requiredParameter->arrayTypes[0]->name . '::hydrateMultiple($data[\'' . $requiredParameter->originalName . '\']),' . PHP_EOL;
+                continue;
+            }
+
+            $hydrationLogic .= $requiredParameter->formattedName . ': $data[\'' . $requiredParameter->originalName . '\'],' . PHP_EOL;
+        }
+
+        return $hydrationLogic;
+    }
+
     public function generateDocblock(): string
     {
         $hasDocblock = false;
