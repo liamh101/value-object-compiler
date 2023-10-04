@@ -81,6 +81,10 @@ readonly class DecodedObject
             $multipleTypes = false;
             $hasArray = false;
 
+            if (count($optionalParameter->types) === 1 && $optionalParameter->hasType(ParameterType::NULL)) {
+                $parameters .= 'mixed';
+            }
+
             foreach ($optionalParameter->types as $type) {
                 if ($type === ParameterType::NULL) {
                     continue;
