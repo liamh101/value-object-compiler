@@ -126,7 +126,7 @@ readonly class DecodedObject
             }
 
             if ($requiredParameter->hasType(ParameterType::ARRAY) && $requiredParameter->arrayTypes[0] instanceof DecodedObject) {
-                $hydrationLogic .= $requiredParameter->formattedName . ': ' . $requiredParameter->arrayTypes[0]->name . '::hydrateMultiple($data[\'' . $requiredParameter->originalName . '\']),' . PHP_EOL;
+                $hydrationLogic .= $requiredParameter->formattedName . ': ' . $requiredParameter->arrayTypes[0]->name . '::hydrateMany($data[\'' . $requiredParameter->originalName . '\']),' . PHP_EOL;
                 continue;
             }
 
@@ -140,7 +140,7 @@ readonly class DecodedObject
             }
 
             if ($optionalParameter->hasType(ParameterType::ARRAY) && $optionalParameter->arrayTypes[0] instanceof DecodedObject) {
-                $hydrationLogic .= $optionalParameter->formattedName . ': ' . $optionalParameter->arrayTypes[0]->name . '::hydrateMultiple($data[\'' . $optionalParameter->originalName . '\'] ?? []),' . PHP_EOL;
+                $hydrationLogic .= $optionalParameter->formattedName . ': ' . $optionalParameter->arrayTypes[0]->name . '::hydrateMany($data[\'' . $optionalParameter->originalName . '\'] ?? []),' . PHP_EOL;
                 continue;
             }
 
