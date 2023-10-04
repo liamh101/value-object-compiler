@@ -133,6 +133,20 @@ readonly class DecodedObject
             $hydrationLogic .= $requiredParameter->formattedName . ': $data[\'' . $requiredParameter->originalName . '\'],' . PHP_EOL;
         }
 
+        foreach ($this->getOptionalParameters() as $optionalParameter) {
+            if ($optionalParameter->subObject && $optionalParameter->hasType(ParameterType::OBJECT)) {
+                $hydrationLogic .= $optionalParameter->formattedName . ': isset($data[\'' . $optionalParameter->originalName . '\'] ?' . $optionalParameter->subObject->name . '::hydrate($data[\'' . $optionalParameter->originalName . '\']) : null,' . PHP_EOL;
+                continue;
+            }
+
+            if ($optionalParameter->hasType(ParameterType::ARRAY) && $optionalParameter->arrayTypes[0] instanceof DecodedObject) {
+                $hydrationLogic .= $optionalParameter->formattedName . ': ' . $optionalParameter->arrayTypes[0]->name . '::hydrateMultiple($data[\'' . $optionalParameter->originalName . '\'] ?? []),' . PHP_EOL;
+                continue;
+            }
+
+            $hydrationLogic .= $optionalParameter->formattedName . ': $data[\'' . $optionalParameter->originalName . '\'] ?? ' . ($optionalParameter->hasType(ParameterType::ARRAY) ? '[],' : 'null,') . PHP_EOL;
+        }
+
         return $hydrationLogic;
     }
 
