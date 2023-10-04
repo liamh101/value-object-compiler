@@ -12,9 +12,15 @@ readonly class {{ClassName}}
     /**
     * @return self[]
     */
-    public static function hydrateMany(array $data): array
+    public static function hydrateMany(array $bulkData): array
     {
+        $result = [];
 
+        foreach ($bulkData as $data) {
+            $result[] = self::hydrate($data);
+        }
+
+        return $result;
     }
 
     public static function hydrate(array $data): self
