@@ -99,10 +99,10 @@ readonly class DecodedObject
                 }
 
                 if ($type === ParameterType::OBJECT && $optionalParameter->subObject) {
-                    $parameters .= $optionalParameter->subObject->name;
+                    $parameters .= ParameterType::NULL->getDefinitionName() . $optionalParameter->subObject->name;
                 }
 
-                $parameters .= $type->getDefinitionName();
+                $parameters .= ParameterType::NULL->getDefinitionName() . $type->getDefinitionName();
                 $multipleTypes = true;
             }
 
