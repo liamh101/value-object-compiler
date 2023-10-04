@@ -4,6 +4,7 @@ namespace LiamH\Valueobjectgenerator\Service;
 
 use LiamH\Valueobjectgenerator\Exception\FileException;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
+use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
 
 class FileService
 {
@@ -46,5 +47,16 @@ class FileService
         $this->cacheFiles['valueObject'] = $contents;
 
         return $contents;
+    }
+
+    public function writeFile(GeneratedFile $file): true
+    {
+        $result = file_put_contents($file->getFullFileName(), $file->contents);
+
+        if (!$result) {
+            throw FileException::cannotWriteFile($file->name);
+        }
+
+        return true;
     }
 }

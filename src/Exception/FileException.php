@@ -10,4 +10,9 @@ final class FileException extends Exception
     {
         return new FileException('File ' . $filename . ' could not be found.');
     }
+
+    public static function cannotWriteFile(string $filename): self
+    {
+        return new FileException('Cannot create file ' . $filename);
+    }
 }
