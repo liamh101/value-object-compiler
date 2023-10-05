@@ -10,8 +10,8 @@ readonly class {{ClassName}}
     }
 
     /**
-    * @return self[]
-    */
+     * @return self[]
+     */
     public static function hydrateMany(array $bulkData): array
     {
         $result = [];

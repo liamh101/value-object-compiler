@@ -162,8 +162,7 @@ readonly class DecodedObject
         foreach ($this->parameters as $parameter) {
             if (is_array($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
-                $docblock .= PHP_EOL . '*@var ';
-
+                $docblock .= PHP_EOL . "\t " . '* @var ';
                 foreach ($parameter->arrayTypes as $key => $type) {
                     if ($key > 0) {
                         $docblock .= '|';
@@ -187,7 +186,7 @@ readonly class DecodedObject
             return '';
         }
 
-        $docblock .= PHP_EOL . '*/';
+        $docblock .= PHP_EOL . "\t " . '*/';
         return $docblock;
     }
 }

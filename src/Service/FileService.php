@@ -5,6 +5,7 @@ namespace LiamH\Valueobjectgenerator\Service;
 use LiamH\Valueobjectgenerator\Exception\FileException;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
+use Symfony\Component\Process\Process;
 
 class FileService
 {
@@ -56,6 +57,21 @@ class FileService
         if (!$result) {
             throw FileException::cannotWriteFile($file->name);
         }
+
+        $this->formatFile($file);
+
+        return true;
+    }
+
+    private function formatFile(GeneratedFile $file): true
+    {
+        $process = new Process(['vendor/bin/phpcbf', '-q', '--standard=PSR12', $file->getFullFileName()]);
+        $process->run();
+
+        // A successful run is deemed unsuccessful
+//        if (!$process->isSuccessful()) {
+//            throw FileException::couldNotFormatFile($file->name, $process->getOutput());
+//        }
 
         return true;
     }

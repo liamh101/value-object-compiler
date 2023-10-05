@@ -15,4 +15,9 @@ final class FileException extends Exception
     {
         return new FileException('Cannot create file ' . $filename);
     }
+
+    public static function couldNotFormatFile(string $filename, string $output): self
+    {
+        return new FileException('Could not format file ' . $filename . ': ' . $output);
+    }
 }
