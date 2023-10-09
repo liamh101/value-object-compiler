@@ -211,6 +211,29 @@ class JsonGenerator
             }
         }
 
+        foreach ($masterParameters as $key => $masterParameter) {
+            if (!$masterParameter->hasType(ParameterType::ARRAY)) {
+                continue;
+            }
+
+            $decodedObjects = array_filter($masterParameter->arrayTypes, static fn ($type) => $type instanceof DecodedObject);
+            $additionalTypes = array_filter($masterParameter->arrayTypes, static fn ($type) => !$type instanceof DecodedObject);
+
+            if (count($decodedObjects) < 2) {
+                continue;
+            }
+
+            $additionalTypes[] = $this->reduceObjects($decodedObjects);
+
+            $masterParameters[$key] = new ObjectParameter(
+                originalName: $masterParameter->originalName,
+                formattedName: $masterParameter->formattedName,
+                types: $masterParameter->types,
+                subObject: $masterParameter->subObject,
+                arrayTypes: $additionalTypes,
+            );
+        }
+
         return new DecodedObject(
             $masterObject->name,
             $masterParameters,
