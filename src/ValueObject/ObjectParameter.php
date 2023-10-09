@@ -14,8 +14,8 @@ readonly class ObjectParameter
         public string $originalName,
         public string $formattedName,
         public array $types,
+        public array $arrayTypes = [],
         public ?DecodedObject $subObject = null,
-        public ?array $arrayTypes = [],
     ) {
     }
 

@@ -3,10 +3,11 @@
 namespace LiamH\Valueobjectgenerator\Generator;
 
 use LiamH\Valueobjectgenerator\Enum\ParameterType;
+use LiamH\Valueobjectgenerator\Reducer\ObjectReducer;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
-class JsonGenerator
+readonly class JsonGenerator
 {
     public function generateClassFromSource(string $parentName, string $rawJson): DecodedObject
     {
@@ -107,136 +108,11 @@ class JsonGenerator
             );
         }
 
-        $refinedObject = $this->reduceObjects($objects);
-
         return new ObjectParameter(
             originalName: $originalName,
             formattedName: $formattedName,
             types: [ParameterType::ARRAY],
-            arrayTypes: [$refinedObject],
-        );
-    }
-
-    /**
-     * @param DecodedObject[] $decodedObjects
-     * @return DecodedObject
-     */
-    private function reduceObjects(array $decodedObjects): DecodedObject
-    {
-        $masterObject = $decodedObjects[0];
-        $masterParameters = $masterObject->parameters;
-
-        foreach ($decodedObjects as $decodedObject) {
-            $optionalParameterValidationList = array_keys($masterParameters);
-
-            foreach ($decodedObject->parameters as $parameterName => $parameter) {
-                $foundParam = array_search($parameterName, $optionalParameterValidationList, true);
-
-                if ($foundParam !== false) {
-                    array_splice($optionalParameterValidationList, $foundParam, 1);
-                }
-
-                if (!isset($masterParameters[$parameterName])) {
-                    $newTypes = $parameter->types;
-
-                    if (!in_array(ParameterType::NULL, $newTypes)) {
-                        $newTypes[] = ParameterType::NULL;
-                    }
-
-                    $masterParameters[$parameterName] = new ObjectParameter(
-                        originalName: $parameter->originalName,
-                        formattedName: $parameter->formattedName,
-                        types: $newTypes,
-                        subObject: $parameter->subObject,
-                        arrayTypes: $parameter->arrayTypes,
-                    );
-                    continue;
-                }
-
-                if (count($parameter->types) === 1 && $parameter->types[0] === ParameterType::OBJECT) {
-                    $subObject = $this->reduceObjects([$parameter->subObject, $masterParameters[$parameterName]->subObject]);
-                    $masterParameters[$parameterName] = new ObjectParameter(
-                        originalName: $parameter->originalName,
-                        formattedName: $parameter->formattedName,
-                        types: $parameter->types,
-                        subObject: $subObject,
-                        arrayTypes: $parameter->arrayTypes,
-                    );
-                    continue;
-                }
-
-                $newTypes = $parameter->types;
-                $newArrayTypes = $parameter->arrayTypes;
-
-                foreach ($masterParameters[$parameterName]->types as $type) {
-                    if (!in_array($type, $newTypes, true)) {
-                        $newTypes[] = $type;
-                    }
-                }
-
-                foreach ($masterParameters[$parameterName]->arrayTypes as $arrayType) {
-                    if (!in_array($arrayType, $newArrayTypes, true)) {
-                        $newArrayTypes[] = $arrayType;
-                    }
-                }
-
-                $masterParameters[$parameterName] = new ObjectParameter(
-                    originalName: $parameter->originalName,
-                    formattedName: $parameter->formattedName,
-                    types: $newTypes,
-                    subObject: $parameter->subObject,
-                    arrayTypes: $newArrayTypes,
-                );
-            }
-
-            if (count($optionalParameterValidationList) === 0) {
-                continue;
-            }
-
-            foreach ($optionalParameterValidationList as $optionalParameterName) {
-                $duplicateObject = $masterParameters[$optionalParameterName];
-                $newTypes = $masterParameters[$optionalParameterName]->types;
-
-                if (!in_array(ParameterType::NULL, $newTypes)) {
-                    $newTypes[] = ParameterType::NULL;
-                }
-
-                $masterParameters[$optionalParameterName] = new ObjectParameter(
-                    originalName: $duplicateObject->originalName,
-                    formattedName: $duplicateObject->formattedName,
-                    types: $newTypes,
-                    subObject: $duplicateObject->subObject,
-                    arrayTypes: $duplicateObject->arrayTypes,
-                );
-            }
-        }
-
-        foreach ($masterParameters as $key => $masterParameter) {
-            if (!$masterParameter->hasType(ParameterType::ARRAY)) {
-                continue;
-            }
-
-            $decodedObjects = array_filter($masterParameter->arrayTypes, static fn ($type) => $type instanceof DecodedObject);
-            $additionalTypes = array_filter($masterParameter->arrayTypes, static fn ($type) => !$type instanceof DecodedObject);
-
-            if (count($decodedObjects) < 2) {
-                continue;
-            }
-
-            $additionalTypes[] = $this->reduceObjects($decodedObjects);
-
-            $masterParameters[$key] = new ObjectParameter(
-                originalName: $masterParameter->originalName,
-                formattedName: $masterParameter->formattedName,
-                types: $masterParameter->types,
-                subObject: $masterParameter->subObject,
-                arrayTypes: $additionalTypes,
-            );
-        }
-
-        return new DecodedObject(
-            $masterObject->name,
-            $masterParameters,
+            arrayTypes: [(new ObjectReducer($objects))->reduceObjects()],
         );
     }
 
