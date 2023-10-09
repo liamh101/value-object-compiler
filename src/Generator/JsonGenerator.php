@@ -127,13 +127,13 @@ class JsonGenerator
         $masterParameters = $masterObject->parameters;
 
         foreach ($decodedObjects as $decodedObject) {
-            $duplicateKeys = array_keys($masterParameters);
+            $optionalParameterValidationList = array_keys($masterParameters);
 
             foreach ($decodedObject->parameters as $parameterName => $parameter) {
-                $foundPara = array_search($parameterName, $decodedObjects, true);
+                $foundParam = array_search($parameterName, $optionalParameterValidationList, true);
 
-                if (!$foundPara !== false) {
-                    unset($duplicateKeys[$foundPara]);
+                if ($foundParam !== false) {
+                    array_splice($optionalParameterValidationList, $foundParam, 1);
                 }
 
                 if (!isset($masterParameters[$parameterName])) {
@@ -189,19 +189,19 @@ class JsonGenerator
                 );
             }
 
-            if (count($duplicateKeys) === 0) {
+            if (count($optionalParameterValidationList) === 0) {
                 continue;
             }
 
-            foreach ($duplicateKeys as $duplicateKey) {
-                $duplicateObject = $masterParameters[$duplicateKey];
-                $newTypes = $masterParameters[$duplicateKey]->types;
+            foreach ($optionalParameterValidationList as $optionalParameterName) {
+                $duplicateObject = $masterParameters[$optionalParameterName];
+                $newTypes = $masterParameters[$optionalParameterName]->types;
 
                 if (!in_array(ParameterType::NULL, $newTypes)) {
                     $newTypes[] = ParameterType::NULL;
                 }
 
-                $masterParameters[$duplicateKey] = new ObjectParameter(
+                $masterParameters[$optionalParameterName] = new ObjectParameter(
                     originalName: $duplicateObject->originalName,
                     formattedName: $duplicateObject->formattedName,
                     types: $newTypes,
