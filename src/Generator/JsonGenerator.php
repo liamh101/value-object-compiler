@@ -20,6 +20,11 @@ readonly class JsonGenerator
         return $this->generateObject($parentName, $formattedJson);
     }
 
+    /**
+     * @param string $objectName
+     * @param array<string, mixed> $formattedJson
+     * @return DecodedObject
+     */
     private function generateObject(string $objectName, array $formattedJson): DecodedObject
     {
         /** @var ObjectParameter[] $parameters */
@@ -34,7 +39,7 @@ readonly class JsonGenerator
                 continue;
             }
 
-            if ($parameter === ParameterType::ARRAY) {
+            if ($parameter === ParameterType::ARRAY && is_array($value)) {
                 $parameters[$parameterName] = $this->handleArrayType($value, $name, $parameterName);
                 continue;
             }
@@ -49,6 +54,13 @@ readonly class JsonGenerator
         return new DecodedObject($this->createClassName($objectName), $parameters);
     }
 
+    /**
+     * @param array<string, mixed> $arrayValue
+     * @param string $originalName
+     * @param string $formattedName
+     * @return ObjectParameter
+     * @throws \Exception
+     */
     private function handleArrayType(array $arrayValue, string $originalName, string $formattedName): ObjectParameter
     {
         if ($this->isSubclass($arrayValue)) {
@@ -71,7 +83,7 @@ readonly class JsonGenerator
                 $types[] = $parameter;
             }
 
-            if ($parameter === ParameterType::ARRAY) {
+            if ($parameter === ParameterType::ARRAY && is_array($value)) {
                 $object = $this->handleArrayType(
                     $value,
                     substr($originalName, 0, -1),
@@ -84,7 +96,7 @@ readonly class JsonGenerator
                     }
                 }
 
-                if ($object->types[0] === ParameterType::OBJECT) {
+                if ($object->types[0] === ParameterType::OBJECT && $object->subObject instanceof DecodedObject) {
                     $objects[] = $object->subObject;
                 }
             }
@@ -133,7 +145,10 @@ readonly class JsonGenerator
         );
     }
 
-
+    /**
+     * @param array<string|int, mixed> $potentialSubclass
+     * @return bool
+     */
     private function isSubclass(array $potentialSubclass): bool
     {
         $keys = array_keys($potentialSubclass);
