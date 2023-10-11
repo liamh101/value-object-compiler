@@ -16,11 +16,13 @@ class GenerateFromJson extends Command
 {
     private readonly JsonGenerator $jsonGenerator;
     private readonly ValueObjectGenerator $valueObjectGenerator;
+    private readonly FileService $fileService;
 
     public function __construct(string $name = null)
     {
         $this->jsonGenerator = new JsonGenerator();
-        $this->valueObjectGenerator = new ValueObjectGenerator(new DecodedObjectService(), new FileService());
+        $this->fileService = new FileService();
+        $this->valueObjectGenerator = new ValueObjectGenerator(new DecodedObjectService(), $this->fileService);
         parent::__construct($name);
     }
 
@@ -43,7 +45,10 @@ class GenerateFromJson extends Command
             throw new \RuntimeException('File could not be found!');
         }
 
-        $result = $this->jsonGenerator->generateClassFromSource('test', $contents);
+        $result = $this->jsonGenerator->generateClassFromSource(
+            $this->fileService->getFileNameFromPath($fileLocation),
+            $contents
+        );
 
         $this->valueObjectGenerator->createFiles($result);
 

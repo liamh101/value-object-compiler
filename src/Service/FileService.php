@@ -37,6 +37,26 @@ class FileService
         );
     }
 
+    public function getFileNameFromPath(string $path): string
+    {
+        preg_match('/[\w-]+\./', $path, $matches);
+
+        return str_replace('.', '', $matches[0]);
+    }
+
+    public function writeFile(GeneratedFile $file): true
+    {
+        $result = file_put_contents($file->getFullFileName(), $file->contents);
+
+        if (!$result) {
+            throw FileException::cannotWriteFile($file->name);
+        }
+
+        $this->formatFile($file);
+
+        return true;
+    }
+
     private function getValueObjectFile(): string
     {
         if (isset($this->cacheFiles['valueObject'])) {
@@ -54,18 +74,6 @@ class FileService
         return $contents;
     }
 
-    public function writeFile(GeneratedFile $file): true
-    {
-        $result = file_put_contents($file->getFullFileName(), $file->contents);
-
-        if (!$result) {
-            throw FileException::cannotWriteFile($file->name);
-        }
-
-        $this->formatFile($file);
-
-        return true;
-    }
 
     private function formatFile(GeneratedFile $file): true
     {
