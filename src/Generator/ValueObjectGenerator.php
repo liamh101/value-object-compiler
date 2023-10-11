@@ -3,6 +3,7 @@
 namespace LiamH\Valueobjectgenerator\Generator;
 
 use LiamH\Valueobjectgenerator\Enum\FileExtension;
+use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
@@ -13,6 +14,7 @@ class ValueObjectGenerator
     private array $availableObjects = [];
 
     public function __construct(
+        private readonly DecodedObjectService $decodedObjectService,
         private readonly FileService $fileService,
     ) {
     }
@@ -23,7 +25,16 @@ class ValueObjectGenerator
         $this->addObject($baseObject);
 
         foreach ($this->availableObjects as $object) {
-            $generatedFiles[] = new GeneratedFile($object->name, $this->fileService->populateValueObjectFile($object), FileExtension::PHP);
+            $generatedFiles[] = new GeneratedFile(
+                $object->name,
+                $this->fileService->populateValueObjectFile(
+                    $object->name,
+                    $this->decodedObjectService->generateDocblock($object),
+                    $this->decodedObjectService->generateParameters($object),
+                    $this->decodedObjectService->generateHydrationLogic($object),
+                ),
+                FileExtension::PHP
+            );
         }
 
         array_walk($generatedFiles, fn (GeneratedFile $file) => $this->fileService->writeFile($file));

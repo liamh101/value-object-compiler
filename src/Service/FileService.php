@@ -14,8 +14,12 @@ class FileService
     /** @var string[] */
     private array $cacheFiles = [];
 
-    public function populateValueObjectFile(DecodedObject $object): string
-    {
+    public function populateValueObjectFile(
+        string $className,
+        string $docblock,
+        string $parameters,
+        string $hydrationLogic,
+    ): string {
         return str_replace(
             [
                 '{{ClassName}}',
@@ -24,10 +28,10 @@ class FileService
                 '{{HydrationLogic}}'
             ],
             [
-                $object->name,
-                $object->generateDocblock(),
-                $object->generateParameters(),
-                $object->generateHydrationLogic(),
+                $className,
+                $docblock,
+                $parameters,
+                $hydrationLogic,
             ],
             $this->getValueObjectFile()
         );

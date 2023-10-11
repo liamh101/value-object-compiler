@@ -4,6 +4,7 @@ namespace LiamH\Valueobjectgenerator\Console\Command;
 
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
+use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -19,7 +20,7 @@ class GenerateFromJson extends Command
     public function __construct(string $name = null)
     {
         $this->jsonGenerator = new JsonGenerator();
-        $this->valueObjectGenerator = new ValueObjectGenerator(new FileService());
+        $this->valueObjectGenerator = new ValueObjectGenerator(new DecodedObjectService(), new FileService());
         parent::__construct($name);
     }
 
