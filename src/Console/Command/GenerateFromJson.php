@@ -45,10 +45,14 @@ class GenerateFromJson extends Command
             throw new \RuntimeException('File could not be found!');
         }
 
+        $output->writeln('Decoding Source File');
+
         $result = $this->jsonGenerator->generateClassFromSource(
             $this->fileService->getFileNameFromPath($fileLocation),
             $contents
         );
+
+        $output->writeln('Writing to Files');
 
         $this->valueObjectGenerator->createFiles($result);
 
