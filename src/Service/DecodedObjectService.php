@@ -54,6 +54,7 @@ class DecodedObjectService
 
                 if ($type === ParameterType::OBJECT && $optionalParameter->subObject) {
                     $parameters .= ParameterType::NULL->getDefinitionName() . $optionalParameter->subObject->name;
+                    continue;
                 }
 
                 $parameters .= ParameterType::NULL->getDefinitionName() . $type->getDefinitionName();
