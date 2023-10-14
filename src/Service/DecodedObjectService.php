@@ -134,9 +134,10 @@ class DecodedObjectService
         $docblock = '/**';
 
         foreach ($decodedObject->parameters as $parameter) {
-            if (is_array($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
+            if (count($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
                 $docblock .= PHP_EOL . "\t " . '* @var ';
+
                 foreach ($parameter->arrayTypes as $key => $type) {
                     if ($key > 0) {
                         $docblock .= '|';
