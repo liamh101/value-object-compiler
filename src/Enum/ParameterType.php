@@ -17,7 +17,7 @@ enum ParameterType: string
         return match ($this) {
             self::STRING => 'string',
             self::INTEGER => 'int',
-            self::FLOAT => 'double',
+            self::FLOAT => 'float',
             self::ARRAY => 'array',
             self::OBJECT => '',
             self::NULL => '?',
