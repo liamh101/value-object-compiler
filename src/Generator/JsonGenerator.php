@@ -4,11 +4,17 @@ namespace LiamH\Valueobjectgenerator\Generator;
 
 use LiamH\Valueobjectgenerator\Enum\ParameterType;
 use LiamH\Valueobjectgenerator\Reducer\ObjectReducer;
+use LiamH\Valueobjectgenerator\Service\NameService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
 readonly class JsonGenerator
 {
+    public function __construct(
+        private NameService $nameService,
+    ) {
+    }
+
     public function generateClassFromSource(string $parentName, string $rawJson): DecodedObject
     {
         $formattedJson = json_decode($rawJson, true, 512, JSON_THROW_ON_ERROR);
@@ -32,7 +38,7 @@ readonly class JsonGenerator
 
         foreach ($formattedJson as $name => $value) {
             $parameter = ParameterType::from(gettype($value));
-            $parameterName = $this->createVariableName($name);
+            $parameterName = $this->nameService->createVariableName($name);
 
             if (isset($parameters[$parameterName])) {
                 $parameters[$parameterName] = $this->updateExistingParameter($parameters[$parameterName], $parameter);
@@ -51,7 +57,7 @@ readonly class JsonGenerator
             );
         }
 
-        return new DecodedObject($this->createClassName($objectName), $parameters);
+        return new DecodedObject($this->nameService->createClassName($objectName), $parameters);
     }
 
     /**
@@ -162,22 +168,5 @@ readonly class JsonGenerator
         }
 
         return false;
-    }
-
-    private function createClassName(string $name): string
-    {
-        return $this->createName($name);
-    }
-
-    private function createVariableName(string $name): string
-    {
-        return lcfirst($this->createName($name));
-    }
-
-    private function createName(string $name): string
-    {
-        $words = explode(' ', str_replace(['-', '_'], ' ', $name));
-
-        return implode('', array_map(static fn ($word) => ucfirst($word), $words));
     }
 }
