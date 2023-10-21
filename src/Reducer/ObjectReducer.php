@@ -8,6 +8,8 @@ use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
 class ObjectReducer
 {
+    private const MINIMUM_OBJECT_COUNT = 2;
+
     private DecodedObject $masterObject;
 
     /**
@@ -21,7 +23,7 @@ class ObjectReducer
     public function __construct(
         private array $decodedObjects,
     ) {
-        if (count($this->decodedObjects) < 2) {
+        if (count($this->decodedObjects) < self::MINIMUM_OBJECT_COUNT) {
             throw new \Exception('Not enough Objects to reduce');
         }
 
@@ -159,7 +161,7 @@ class ObjectReducer
             $decodedObjects = array_filter($masterParameter->arrayTypes, static fn ($type) => $type instanceof DecodedObject);
             $additionalTypes = array_filter($masterParameter->arrayTypes, static fn ($type) => !$type instanceof DecodedObject);
 
-            if (count($decodedObjects) < 2) {
+            if (count($decodedObjects) < self::MINIMUM_OBJECT_COUNT) {
                 continue;
             }
 
