@@ -111,7 +111,7 @@ class DecodedObjectService
             $hydrationLogic = $objectParameter->formattedName . ': ' . $objectParameter->arrayTypes[0]->name . '::hydrateMany($data[\'' . $objectParameter->originalName . '\']';
 
             if ($optionalParameter) {
-                $hydrationLogic .= '?? []),' . PHP_EOL;
+                $hydrationLogic .= ' ?? []),' . PHP_EOL;
                 return $hydrationLogic;
             }
 
