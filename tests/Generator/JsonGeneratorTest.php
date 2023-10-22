@@ -96,7 +96,7 @@ class JsonGeneratorTest extends TestCase
         $expectedObject = new DecodedObject('ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
 
         self::assertInstanceOf(DecodedObject::class, $result->arrayTypes[0]);
-        self::assertSame('ObjectTes', $result->arrayTypes[0]->name);
+        self::assertSame('ObjectTest', $result->arrayTypes[0]->name);
         self::assertCount(2, $result->arrayTypes[0]->parameters);
 
         self::assertSame('name', $result->arrayTypes[0]->parameters['name']->originalName);
@@ -135,7 +135,7 @@ class JsonGeneratorTest extends TestCase
         $expectedObject = new DecodedObject('ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
 
         self::assertInstanceOf(DecodedObject::class, $result->arrayTypes[0]);
-        self::assertSame('ObjectTes', $result->arrayTypes[0]->name);
+        self::assertSame('ObjectTest', $result->arrayTypes[0]->name);
         self::assertCount(2, $result->arrayTypes[0]->parameters);
 
         self::assertSame('name', $result->arrayTypes[0]->parameters['name']->originalName);
@@ -334,7 +334,7 @@ class JsonGeneratorTest extends TestCase
         self::assertSame([ParameterType::ARRAY], $result->parameters['objectType']->subObject->parameters['subArray']->types);
 
         self::assertInstanceOf(DecodedObject::class, $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]);
-        self::assertSame('SubArra', $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]->name);
+        self::assertSame('SubArray', $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]->name);
         self::assertCount(3, $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]->parameters);
 
         self::assertSame('required', $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]->parameters['required']->originalName);

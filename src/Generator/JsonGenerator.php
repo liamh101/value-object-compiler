@@ -92,8 +92,8 @@ readonly class JsonGenerator
             if ($parameter === ParameterType::ARRAY && is_array($value)) {
                 $object = $this->handleArrayType(
                     $value,
-                    substr($originalName, 0, -1),
-                    substr($formattedName, 0, -1)
+                    $this->nameService->makeSingular($originalName),
+                    $this->nameService->makeSingular($formattedName),
                 );
 
                 foreach ($object->types as $type) {

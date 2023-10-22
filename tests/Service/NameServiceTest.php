@@ -47,6 +47,17 @@ class NameServiceTest extends TestCase
         self::assertSame($expectedResult, $result);
     }
 
+    /**
+     * @dataProvider singularNameProvider
+     */
+    public function testMakeSingular(string $pluralString, string $expectedSingular): void
+    {
+        $service = new NameService();
+        $result = $service->makeSingular($pluralString);
+
+        self::assertSame($expectedSingular, $result);
+    }
+
     public static function classNameProvider(): array
     {
         return [
@@ -66,6 +77,20 @@ class NameServiceTest extends TestCase
             ['test name', 'testName'],
             ['testname', 'testname'],
             ['TestName', 'testName'],
+        ];
+    }
+
+    public static function singularNameProvider(): array
+    {
+        return [
+            ['buses', 'bus'],
+            ['heroes', 'hero'],
+            ['echoes', 'echo'],
+            ['stories', 'story'],
+            ['berries', 'berry'],
+            ['animals', 'animal'],
+            ['dreams', 'dream'],
+            ['cvss', 'cvss'],
         ];
     }
 }
