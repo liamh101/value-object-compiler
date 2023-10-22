@@ -81,6 +81,45 @@ class DecodedObjectServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider parameterProvider
+     */
+    public function testGenerateParameter(DecodedObject $object, string $expectedParameter): void
+    {
+        $service = $this->createService();
+        $result = $service->generateParameters($object);
+
+        self::assertSame($expectedParameter, $result);
+    }
+
+    public static function parameterProvider(): array
+    {
+        $stringParameter = new ObjectParameter('stringType', 'stringType', [ParameterType::STRING]);
+        $integerParameter = new ObjectParameter('intType', 'intType', [ParameterType::INTEGER]);
+        $floatParameter = new ObjectParameter('floatType', 'floatType', [ParameterType::FLOAT]);
+        $booleanParameter = new ObjectParameter('booleanType', 'booleanType', [ParameterType::BOOLEAN]);
+        $objectParameter = new ObjectParameter('objectType', 'objectType', [ParameterType::OBJECT], [], new DecodedObject('Object', [$stringParameter]));
+        $nullParameter = new ObjectParameter('nullType', 'nullType', [ParameterType::NULL]);
+
+        return [
+            'Singular Required String Type' => [new DecodedObject('String', [$stringParameter]), "public string \$stringType," . PHP_EOL],
+            'Singular Required Int Type' => [new DecodedObject('Int', [$integerParameter]), "public int \$intType," . PHP_EOL],
+            'Singular Required Float Type' => [new DecodedObject('Float', [$floatParameter]), "public float \$floatType," . PHP_EOL],
+            'Singular Required Boolean Type' => [new DecodedObject('Bool', [$booleanParameter]), "public bool \$booleanType," . PHP_EOL],
+            'Singular Required Object Type' => [new DecodedObject('Object', [$objectParameter]), "public Object \$objectType," . PHP_EOL],
+            'Singular Required Array Type' => [new DecodedObject('Array', [new ObjectParameter('arrayType', 'arrayType', [ParameterType::ARRAY], [ParameterType::STRING])]), "public array \$arrayType," . PHP_EOL],
+            'Singular Required Multi Standard Type' => [new DecodedObject('Multi', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::INTEGER])]), "public string|int \$stringType," . PHP_EOL],
+            'Singular Required Multi Object Type' => [new DecodedObject('Multi', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::OBJECT], [], new DecodedObject('Object', [$stringParameter]))]), "public string|Object \$stringType," . PHP_EOL],
+            'Singular Nullable String Type' => [new DecodedObject('Multi', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::NULL])]), "public ?string \$stringType = null," . PHP_EOL],
+            'Singular Nullable Int Type' => [new DecodedObject('Multi', [new ObjectParameter('intType', 'intType', [ParameterType::INTEGER, ParameterType::NULL])]), "public ?int \$intType = null," . PHP_EOL],
+            'Singular Nullable Float Type' => [new DecodedObject('Multi', [new ObjectParameter('floatType', 'floatType', [ParameterType::FLOAT, ParameterType::NULL])]), "public ?float \$floatType = null," . PHP_EOL],
+            'Singular Nullable Bool Type' => [new DecodedObject('Multi', [new ObjectParameter('boolType', 'boolType', [ParameterType::BOOLEAN, ParameterType::NULL])]), "public ?bool \$boolType = null," . PHP_EOL],
+            'Singular Nullable Object Type' => [new DecodedObject('Multi', [new ObjectParameter('objType', 'objType', [ParameterType::OBJECT, ParameterType::NULL], [], new DecodedObject('Object', [$stringParameter]))]), "public ?Object \$objType = null," . PHP_EOL],
+            'Singular Nullable Array Type' => [new DecodedObject('Array', [new ObjectParameter('arrayType', 'arrayType', [ParameterType::ARRAY, ParameterType::NULL], [ParameterType::STRING])]), "public ?array \$arrayType = []," . PHP_EOL],
+            'Multi Required String and Int' => [new DecodedObject('String', [$stringParameter, $integerParameter]), "public string \$stringType," . PHP_EOL . "public int \$intType," . PHP_EOL],
+        ];
+    }
+
     private function createService(): DecodedObjectService
     {
         return new DecodedObjectService();
