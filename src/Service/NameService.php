@@ -21,16 +21,27 @@ class NameService
         }
 
         if (str_ends_with($name, 'ies')) {
-            return preg_replace('/ies\Z/', 'y', $name);
+            return $this->replaceEndOfString('ies', 'y', $name);
         }
 
         if (str_ends_with($name, 'es')) {
-            return preg_replace('/es\Z/', '', $name);
+            return $this->replaceEndOfString('es', '', $name);
         }
 
         // Ignoring f and fe for the time, due to irregularities in the rule
 
-        return preg_replace('/s\Z/', '', $name);
+        return $this->replaceEndOfString('s', '', $name);
+    }
+
+    private function replaceEndOfString(string $find, string $replace, string $name): string
+    {
+        $result = preg_replace('/' . $find . '\Z/', $replace, $name);
+
+        if (!is_string($result)) {
+            throw new \Exception('Plural replacement didn\'t return string');
+        }
+
+        return $result;
     }
 
     private function createName(string $name): string
