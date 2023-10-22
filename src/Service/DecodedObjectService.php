@@ -137,20 +137,36 @@ class DecodedObjectService
             if (count($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
                 $docblock .= PHP_EOL . "\t " . '* @var ';
+                $isNullable = $parameter->hasArrayType(ParameterType::NULL);
+                $types = 0;
+                $totalTypes = count($parameter->arrayTypes);
 
                 foreach ($parameter->arrayTypes as $key => $type) {
-                    if ($key > 0) {
+                    if ($type === ParameterType::NULL && $totalTypes > 1) {
+                        continue;
+                    }
+
+                    if ($types > 0) {
                         $docblock .= '|';
                     }
+
+                    if ($isNullable) {
+                        $docblock .= '?';
+
+                        if ($totalTypes === 1) {
+                            $docblock .= 'mixed[]';
+                            continue;
+                        }
+                    }
+
+                    $types++;
 
                     if ($type instanceof DecodedObject) {
                         $docblock .= $type->name . '[]';
                         continue;
                     }
 
-                    if ($type instanceof ParameterType) {
-                        $docblock .= $type->getDefinitionName() . '[]';
-                    }
+                    $docblock .= $type->getDefinitionName() . '[]';
                 }
 
                 $docblock .= ' $' . $parameter->formattedName;

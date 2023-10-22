@@ -24,6 +24,11 @@ readonly class ObjectParameter
         return in_array($type, $this->types, true);
     }
 
+    public function hasArrayType(ParameterType $type): bool
+    {
+        return in_array($type, $this->arrayTypes, true);
+    }
+
     public function hasObject(): bool
     {
         if ($this->subObject && $this->hasType(ParameterType::OBJECT)) {
