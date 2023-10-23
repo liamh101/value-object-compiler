@@ -1,5 +1,7 @@
 .idea
 vendor
+.phpunit.cache
+build
 
 composer.lock
 .phpcs-cache

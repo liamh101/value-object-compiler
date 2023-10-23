@@ -114,9 +114,11 @@ class DecodedObjectServiceTest extends TestCase
             'Singular Nullable Int Type' => [new DecodedObject('Multi', [new ObjectParameter('intType', 'intType', [ParameterType::INTEGER, ParameterType::NULL])]), "public ?int \$intType = null," . PHP_EOL],
             'Singular Nullable Float Type' => [new DecodedObject('Multi', [new ObjectParameter('floatType', 'floatType', [ParameterType::FLOAT, ParameterType::NULL])]), "public ?float \$floatType = null," . PHP_EOL],
             'Singular Nullable Bool Type' => [new DecodedObject('Multi', [new ObjectParameter('boolType', 'boolType', [ParameterType::BOOLEAN, ParameterType::NULL])]), "public ?bool \$boolType = null," . PHP_EOL],
+            'Singular Nullable Type' => [new DecodedObject('Multi', [new ObjectParameter('nullType', 'nullType', [ParameterType::NULL])]), "public ?mixed \$nullType = null," . PHP_EOL],
             'Singular Nullable Object Type' => [new DecodedObject('Multi', [new ObjectParameter('objType', 'objType', [ParameterType::OBJECT, ParameterType::NULL], [], new DecodedObject('Object', [$stringParameter]))]), "public ?Object \$objType = null," . PHP_EOL],
             'Singular Nullable Array Type' => [new DecodedObject('Array', [new ObjectParameter('arrayType', 'arrayType', [ParameterType::ARRAY, ParameterType::NULL], [ParameterType::STRING])]), "public ?array \$arrayType = []," . PHP_EOL],
-            'Multi Required String and Int' => [new DecodedObject('String', [$stringParameter, $integerParameter]), "public string \$stringType," . PHP_EOL . "public int \$intType," . PHP_EOL],
+            'Singular Nullable Multi Standard Type' => [new DecodedObject('Multi', [new ObjectParameter('intStringType', 'intStringType', [ParameterType::STRING, ParameterType::INTEGER])]), "public string|int \$intStringType," . PHP_EOL],
+            'Multi Row Required String and Int' => [new DecodedObject('String', [$stringParameter, $integerParameter]), "public string \$stringType," . PHP_EOL . "public int \$intType," . PHP_EOL],
         ];
     }
 

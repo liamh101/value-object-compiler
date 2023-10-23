@@ -36,7 +36,7 @@ class DecodedObjectService
             $hasArray = false;
 
             if (count($optionalParameter->types) === 1 && $optionalParameter->hasType(ParameterType::NULL)) {
-                $parameters .= 'mixed';
+                $parameters .= '?mixed';
             }
 
             foreach ($optionalParameter->types as $type) {
