@@ -3,6 +3,7 @@
 namespace LiamH\Valueobjectgenerator\Reducer;
 
 use LiamH\Valueobjectgenerator\Enum\ParameterType;
+use LiamH\Valueobjectgenerator\Exception\ObjectReducerException;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
@@ -24,14 +25,13 @@ class ObjectReducer
         private array $decodedObjects,
     ) {
         if (count($this->decodedObjects) < self::MINIMUM_OBJECT_COUNT) {
-            throw new \Exception('Not enough Objects to reduce');
+            throw ObjectReducerException::invalidAmount(self::MINIMUM_OBJECT_COUNT);
         }
 
+        $this->validateObjectArray($this->decodedObjects);
+
+        /** @var DecodedObject $masterObject */
         $masterObject = array_pop($this->decodedObjects);
-
-        if (!$masterObject instanceof DecodedObject) {
-            throw new \Exception('Invalid array type');
-        }
 
         $this->masterObject = $masterObject;
         $this->masterParameters = $this->masterObject->parameters;
@@ -174,6 +174,18 @@ class ObjectReducer
                 arrayTypes: $additionalTypes,
                 subObject: $masterParameter->subObject,
             );
+        }
+    }
+
+    /**
+     * @param mixed[] $decodedObjects
+     */
+    private function validateObjectArray(array $decodedObjects): void
+    {
+        foreach ($decodedObjects as $decodedObject) {
+            if (!$decodedObject instanceof DecodedObject) {
+                throw ObjectReducerException::invalidReduceType($decodedObject);
+            }
         }
     }
 }
