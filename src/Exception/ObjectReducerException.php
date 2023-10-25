@@ -21,5 +21,4 @@ class ObjectReducerException extends Exception
 
         return new ObjectReducerException('Object reducer requires DecodedObject. ' . $type . ' passed');
     }
-
 }

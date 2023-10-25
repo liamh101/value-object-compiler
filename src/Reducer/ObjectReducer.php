@@ -135,6 +135,10 @@ class ObjectReducer
 
     private function setParameterAsNullable(string $parameterName): void
     {
+        if (!isset($this->masterParameters[$parameterName])) {
+            return;
+        }
+
         $duplicateObject = $this->masterParameters[$parameterName];
         $newTypes = $this->masterParameters[$parameterName]->types;
 
