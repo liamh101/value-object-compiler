@@ -163,7 +163,7 @@ class ObjectReducer
             }
 
             $decodedObjects = array_filter($masterParameter->arrayTypes, static fn ($type) => $type instanceof DecodedObject);
-            $additionalTypes = array_filter($masterParameter->arrayTypes, static fn ($type) => !$type instanceof DecodedObject);
+            $additionalTypes = array_values(array_filter($masterParameter->arrayTypes, static fn ($type) => !$type instanceof DecodedObject));
 
             if (count($decodedObjects) < self::MINIMUM_OBJECT_COUNT) {
                 continue;

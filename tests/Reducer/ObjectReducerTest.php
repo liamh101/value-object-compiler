@@ -120,4 +120,191 @@ class ObjectReducerTest extends TestCase
 
         self::assertSame([ParameterType::STRING, ParameterType::NULL], $result['String']->types);
     }
+
+    public function testSetNonExistingParameterAsNullable(): void
+    {
+        $reflection = new \ReflectionClass(ObjectReducer::class);
+        $property = $reflection->getProperty('masterParameters');
+        $property->setAccessible(true);
+        $method = $reflection->getMethod('setParameterAsNullable');
+        $method->setAccessible(true);
+
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $method->invokeArgs($reducer, ['NonExistent']);
+
+        $result = $property->getValue($reducer);
+
+        self::assertFalse(isset($result['NonExistent']));
+    }
+
+    public function testReduceChildrenObjectsOnly(): void
+    {
+        $childArrayOne = new DecodedObject(
+            'ChildArray',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
+        );
+        $childArrayTwo = new DecodedObject(
+            'ChildArray',
+            [
+                'String' => new ObjectParameter('String', 'String', [ParameterType::STRING]),
+                'Int' => new ObjectParameter('Int', 'Int', [ParameterType::INTEGER])
+            ]
+        );
+
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, $childArrayTwo])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(ObjectParameter::class, $result->parameters['ObjectArray']);
+        self::assertSame([ParameterType::ARRAY, ParameterType::NULL], $result->parameters['ObjectArray']->types);
+        self::assertCount(1, $result->parameters['ObjectArray']->arrayTypes);
+        self::assertInstanceOf(DecodedObject::class, $result->parameters['ObjectArray']->arrayTypes[0]);
+
+        self::assertSame('ChildArray', $result->parameters['ObjectArray']->arrayTypes[0]->name);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->originalName);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->formattedName);
+        self::assertSame([ParameterType::STRING], $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->types);
+
+        self::assertSame('Int', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['Int']->originalName);
+        self::assertSame('Int', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['Int']->formattedName);
+        self::assertSame([ParameterType::INTEGER, ParameterType::NULL], $result->parameters['ObjectArray']->arrayTypes[0]->parameters['Int']->types);
+    }
+
+    public function testReduceChildrenMixedTypes(): void
+    {
+        $childArrayOne = new DecodedObject(
+            'ChildArray',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
+        );
+        $childArrayTwo = new DecodedObject(
+            'ChildArray',
+            [
+                'String' => new ObjectParameter('String', 'String', [ParameterType::STRING]),
+                'Int' => new ObjectParameter('Int', 'Int', [ParameterType::INTEGER])
+            ]
+        );
+
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, $childArrayTwo, ParameterType::INTEGER])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(ObjectParameter::class, $result->parameters['ObjectArray']);
+        self::assertSame([ParameterType::ARRAY, ParameterType::NULL], $result->parameters['ObjectArray']->types);
+        self::assertCount(2, $result->parameters['ObjectArray']->arrayTypes);
+        self::assertSame(ParameterType::INTEGER, $result->parameters['ObjectArray']->arrayTypes[0]);
+        self::assertInstanceOf(DecodedObject::class, $result->parameters['ObjectArray']->arrayTypes[1]);
+
+        self::assertSame('ChildArray', $result->parameters['ObjectArray']->arrayTypes[1]->name);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[1]->parameters['String']->originalName);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[1]->parameters['String']->formattedName);
+        self::assertSame([ParameterType::STRING], $result->parameters['ObjectArray']->arrayTypes[1]->parameters['String']->types);
+
+        self::assertSame('Int', $result->parameters['ObjectArray']->arrayTypes[1]->parameters['Int']->originalName);
+        self::assertSame('Int', $result->parameters['ObjectArray']->arrayTypes[1]->parameters['Int']->formattedName);
+        self::assertSame([ParameterType::INTEGER, ParameterType::NULL], $result->parameters['ObjectArray']->arrayTypes[1]->parameters['Int']->types);
+
+    }
+
+    public function testReduceChildrenBelowMinimum(): void
+    {
+        $childArrayOne = new DecodedObject(
+            'ChildArray',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
+        );
+
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, ParameterType::INTEGER])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(ObjectParameter::class, $result->parameters['ObjectArray']);
+        self::assertSame([ParameterType::ARRAY, ParameterType::NULL], $result->parameters['ObjectArray']->types);
+        self::assertCount(2, $result->parameters['ObjectArray']->arrayTypes);
+        self::assertSame(ParameterType::INTEGER, $result->parameters['ObjectArray']->arrayTypes[1]);
+        self::assertInstanceOf(DecodedObject::class, $result->parameters['ObjectArray']->arrayTypes[0]);
+
+        self::assertSame('ChildArray', $result->parameters['ObjectArray']->arrayTypes[0]->name);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->originalName);
+        self::assertSame('String', $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->formattedName);
+        self::assertSame([ParameterType::STRING], $result->parameters['ObjectArray']->arrayTypes[0]->parameters['String']->types);
+    }
+
+    public function testUpdateExistingParameterStandard(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::STRING, ParameterType::INTEGER])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::STRING])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(ObjectParameter::class, $result->parameters['Mixed']);
+        self::assertSame('Mixed', $result->parameters['Mixed']->originalName);
+        self::assertSame('Mixed', $result->parameters['Mixed']->formattedName);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Mixed']->types);
+    }
+
+    public function testUpdateExistingParameterArray(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING, ParameterType::INTEGER])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(ObjectParameter::class, $result->parameters['Mixed']);
+        self::assertSame('Mixed', $result->parameters['Mixed']->originalName);
+        self::assertSame('Mixed', $result->parameters['Mixed']->formattedName);
+        self::assertSame([ParameterType::ARRAY], $result->parameters['Mixed']->types);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Mixed']->arrayTypes);
+    }
 }
