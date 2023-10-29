@@ -8,10 +8,10 @@ use LiamH\Valueobjectgenerator\Service\NameService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
-readonly class JsonGenerator implements SourceGenerator
+class JsonGenerator implements SourceGenerator
 {
     public function __construct(
-        private NameService $nameService,
+        private readonly NameService $nameService,
     ) {
     }
 

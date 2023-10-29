@@ -8,7 +8,7 @@ use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\Service\NameService;
 
-readonly class GeneratorCommandFactory implements GeneratorFactory
+class GeneratorCommandFactory implements GeneratorFactory
 {
     public function createNameService(): NameService
     {
