@@ -39,7 +39,7 @@ class FileService
 
     public function getFileContentsFromPath(string $path): string
     {
-        $contents = file_get_contents($path);
+        $contents = @file_get_contents($path);
 
         if ($contents === false) {
             throw FileException::fileNotFound($path);
