@@ -37,6 +37,17 @@ class FileService
         );
     }
 
+    public function getFileContentsFromPath(string $path): string
+    {
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            throw FileException::fileNotFound($path);
+        }
+
+        return $contents;
+    }
+
     public function getFileNameFromPath(string $path): string
     {
         preg_match('/[\w-]+\./', $path, $matches);

@@ -43,11 +43,7 @@ class GenerateFromJson extends Command
             throw new \RuntimeException('Source File not defined');
         }
 
-        $contents = file_get_contents($fileLocation);
-
-        if ($contents === false) {
-            throw new \RuntimeException('File could not be found!');
-        }
+        $contents = $this->fileService->getFileContentsFromPath($fileLocation);
 
         $output->writeln('Decoding Source File');
 

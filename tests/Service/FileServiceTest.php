@@ -3,6 +3,7 @@
 namespace Service;
 
 use LiamH\Valueobjectgenerator\Enum\FileExtension;
+use LiamH\Valueobjectgenerator\Exception\FileException;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
 use PHPUnit\Framework\TestCase;
@@ -97,6 +98,25 @@ readonly class {{ClassName}}
             'multi depth' => ['/testing/test/helloWorld.json', 'helloWorld'],
             'current start depth' => ['./testing/test/helloWorld.json', 'helloWorld'],
         ];
+    }
+
+    public function testGetFileContentsValid(): void
+    {
+        $service = $this->createService();
+
+        $response = $service->getFileContentsFromPath('./tests/TestFiles/testFile.txt');
+
+        self::assertSame('Hello world!', $response);
+    }
+
+    public function testGetFileContentsInvalid(): void
+    {
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessage('File ./tests/TestFiles/missingTestFile.txt could not be found.');
+        $service = $this->createService();
+
+        $service->getFileContentsFromPath('./tests/TestFiles/missingTestFile.txt');
+
     }
 
     public function testPopulateValueObject(): void
