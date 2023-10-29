@@ -2,7 +2,7 @@
 
 namespace LiamH\Valueobjectgenerator\Console\Command;
 
-use LiamH\Valueobjectgenerator\Factory\GeneratorCommandFactory;
+use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
 use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
@@ -16,13 +16,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'generate:json', description: 'Generate Value Objects from a JSON file')]
 class GenerateFromJson extends Command
 {
-    private readonly GeneratorCommandFactory $factory;
+    private readonly JsonGeneratorCommandFactory $factory;
 
     private JsonGenerator $jsonGenerator;
     private ValueObjectGenerator $valueObjectGenerator;
     private FileService $fileService;
 
-    public function __construct(string $name = null, GeneratorCommandFactory $factory)
+    public function __construct(string $name = null, JsonGeneratorCommandFactory $factory)
     {
         $this->factory = $factory;
         parent::__construct($name);

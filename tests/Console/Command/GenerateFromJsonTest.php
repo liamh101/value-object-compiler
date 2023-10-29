@@ -3,7 +3,7 @@
 namespace Console\Command;
 
 use LiamH\Valueobjectgenerator\Console\Command\GenerateFromJson;
-use LiamH\Valueobjectgenerator\Factory\GeneratorCommandFactory;
+use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
 use LiamH\Valueobjectgenerator\Service\FileService;
@@ -47,7 +47,7 @@ class GenerateFromJsonTest extends TestCase
         $method = $reflection->getMethod('execute');
         $method->setAccessible(true);
 
-        $factoryMock = $this->createMock(GeneratorCommandFactory::class);
+        $factoryMock = $this->createMock(JsonGeneratorCommandFactory::class);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())
@@ -64,9 +64,9 @@ class GenerateFromJsonTest extends TestCase
         self::assertSame(0, $result);
     }
 
-    private function createMockFactory(): GeneratorCommandFactory
+    private function createMockFactory(): JsonGeneratorCommandFactory
     {
-        $factory = $this->createMock(GeneratorCommandFactory::class);
+        $factory = $this->createMock(JsonGeneratorCommandFactory::class);
         $factory->expects($this->once())->method('createSourceGenerator')->willReturn($this->createSourceGeneratorMock());
         $factory->expects($this->once())->method('createFileGenerator')->willReturn($this->createFileGeneratorMock());
         $factory->expects($this->once())->method('createFileService')->willReturn($this->createFileServiceMock());

@@ -3,7 +3,7 @@
 namespace LiamH\Valueobjectgenerator\Console;
 
 use LiamH\Valueobjectgenerator\Console\Command\GenerateFromJson;
-use LiamH\Valueobjectgenerator\Factory\GeneratorCommandFactory;
+use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
 use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication
@@ -14,6 +14,6 @@ class Application extends BaseApplication
     {
         parent::__construct('Value Object Generator', self::VERSION);
 
-        $this->add(new GenerateFromJson(null, new GeneratorCommandFactory()));
+        $this->add(new GenerateFromJson(null, new JsonGeneratorCommandFactory()));
     }
 }
