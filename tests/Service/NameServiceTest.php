@@ -91,6 +91,7 @@ class NameServiceTest extends TestCase
             ['animals', 'animal'],
             ['dreams', 'dream'],
             ['cvss', 'cvss'],
+            ['issues', 'issue'],
         ];
     }
 }

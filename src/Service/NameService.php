@@ -24,7 +24,7 @@ class NameService
             return $this->replaceEndOfString('ies', 'y', $name);
         }
 
-        if (str_ends_with($name, 'es')) {
+        if (str_ends_with($name, 'es') && !str_ends_with($name, 'ues')) {
             return $this->replaceEndOfString('es', '', $name);
         }
 
