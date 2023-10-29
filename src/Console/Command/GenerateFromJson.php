@@ -2,6 +2,7 @@
 
 namespace LiamH\Valueobjectgenerator\Console\Command;
 
+use LiamH\Valueobjectgenerator\Factory\GeneratorCommandFactory;
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
 use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
@@ -15,15 +16,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'generate:json', description: 'Generate Value Objects from a JSON file')]
 class GenerateFromJson extends Command
 {
-    private readonly JsonGenerator $jsonGenerator;
-    private readonly ValueObjectGenerator $valueObjectGenerator;
-    private readonly FileService $fileService;
+    private readonly GeneratorCommandFactory $factory;
 
-    public function __construct(string $name = null)
+    private JsonGenerator $jsonGenerator;
+    private ValueObjectGenerator $valueObjectGenerator;
+    private FileService $fileService;
+
+    public function __construct(string $name = null, GeneratorCommandFactory $factory)
     {
-        $this->jsonGenerator = new JsonGenerator(new NameService());
-        $this->fileService = new FileService();
-        $this->valueObjectGenerator = new ValueObjectGenerator(new DecodedObjectService(), $this->fileService);
+        $this->factory = $factory;
         parent::__construct($name);
     }
 
@@ -34,6 +35,8 @@ class GenerateFromJson extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->createServices();
+
         $fileLocation = $input->getArgument('sourceFile');
 
         if (!is_string($fileLocation)) {
@@ -58,5 +61,12 @@ class GenerateFromJson extends Command
         $this->valueObjectGenerator->createFiles($result);
 
         return Command::SUCCESS;
+    }
+
+    private function createServices(): void
+    {
+        $this->jsonGenerator = $this->factory->createSourceGenerator();
+        $this->valueObjectGenerator = $this->factory->createFileGenerator();
+        $this->fileService = $this->factory->createFileService();
     }
 }

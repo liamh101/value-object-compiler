@@ -8,16 +8,16 @@ use LiamH\Valueobjectgenerator\Service\NameService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
-readonly class JsonGenerator
+readonly class JsonGenerator implements SourceGenerator
 {
     public function __construct(
         private NameService $nameService,
     ) {
     }
 
-    public function generateClassFromSource(string $parentName, string $rawJson): DecodedObject
+    public function generateClassFromSource(string $parentName, string $source): DecodedObject
     {
-        $formattedJson = json_decode($rawJson, true, 512, JSON_THROW_ON_ERROR);
+        $formattedJson = json_decode($source, true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($formattedJson)) {
             throw new \RuntimeException('Invalid JSON provided');

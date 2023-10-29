@@ -8,7 +8,7 @@ use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
 
-class ValueObjectGenerator
+class ValueObjectGenerator implements FileGenerator
 {
     /** @var DecodedObject[] */
     private array $availableObjects = [];
