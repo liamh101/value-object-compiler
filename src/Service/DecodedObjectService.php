@@ -84,7 +84,7 @@ class DecodedObjectService
         }
 
         $multipleParameters = false;
-        $hydrationValidation .= 'if (isset(';
+        $hydrationValidation .= 'if (!isset(';
 
         foreach ($requiredParameters as $requiredParameter) {
             if ($multipleParameters) {
