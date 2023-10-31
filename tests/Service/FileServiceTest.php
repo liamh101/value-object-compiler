@@ -66,6 +66,7 @@ readonly class {{ClassName}}
 
     public static function hydrate(array $data): self
     {
+        {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
 }';
@@ -148,6 +149,7 @@ readonly class ClassNameReplacement
 
     public static function hydrate(array $data): self
     {
+        HydrationValidation
         return new self(HydrationReplacement);
     }
 }';
@@ -159,7 +161,8 @@ readonly class ClassNameReplacement
                 'ClassNameReplacement',
                 'Docblock Replacement',
                 'ParameterReplacement',
-                'HydrationReplacement'
+                'HydrationValidation',
+                'HydrationReplacement',
             )
         );
 

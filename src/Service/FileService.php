@@ -18,6 +18,7 @@ class FileService
         string $className,
         string $docblock,
         string $parameters,
+        string $hydrationValidation,
         string $hydrationLogic,
     ): string {
         return str_replace(
@@ -25,12 +26,14 @@ class FileService
                 '{{ClassName}}',
                 '{{Docblock}}',
                 '{{Parameters}}',
+                '{{HydrationValidation}}',
                 '{{HydrationLogic}}'
             ],
             [
                 $className,
                 $docblock,
                 $parameters,
+                $hydrationValidation,
                 $hydrationLogic,
             ],
             $this->getValueObjectFile()

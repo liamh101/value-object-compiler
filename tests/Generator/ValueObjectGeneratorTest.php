@@ -19,12 +19,13 @@ class ValueObjectGeneratorTest extends TestCase
         $objectService = $this->createMock(DecodedObjectService::class);
         $objectService->expects($this->once())->method('generateDocblock')->with($object)->willReturn('Docblock');
         $objectService->expects($this->once())->method('generateParameters')->with($object)->willReturn('Parameter');
+        $objectService->expects($this->once())->method('generateHydrationValidation')->with($object)->willReturn('HydrationValidation');
         $objectService->expects($this->once())->method('generateHydrationLogic')->with($object)->willReturn('Hydration');
 
         $fileService = $this->createMock(FileService::class);
         $fileService->expects($this->once())
             ->method('populateValueObjectFile')
-            ->with('HelloWorld', 'Docblock', 'Parameter', 'Hydration')
+            ->with('HelloWorld', 'Docblock', 'Parameter', 'HydrationValidation', 'Hydration')
             ->willReturn('Successful File');
 
         $fileService->expects($this->once())

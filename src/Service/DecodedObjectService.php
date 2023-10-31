@@ -74,6 +74,35 @@ class DecodedObjectService
         return $parameters;
     }
 
+    public function generateHydrationValidation(DecodedObject $decodedObject): string
+    {
+        $hydrationValidation = '';
+        $requiredParameters = $decodedObject->getRequiredParameters();
+
+        if (!count($requiredParameters)) {
+            return $hydrationValidation;
+        }
+
+        $multipleParameters = false;
+        $hydrationValidation .= 'if (isset(';
+
+        foreach ($requiredParameters as $requiredParameter) {
+            if ($multipleParameters) {
+                $hydrationValidation .= ',';
+            }
+
+            $hydrationValidation .= '$data[\'' . $requiredParameter->formattedName . '\']';
+
+            $multipleParameters = true;
+        }
+
+        $hydrationValidation .= ')) {' . PHP_EOL
+            . "\t\t" . 'throw new \RuntimeException(\'Missing required parameter\');' . PHP_EOL
+            . '}' . PHP_EOL;
+
+        return $hydrationValidation;
+    }
+
     public function generateHydrationLogic(DecodedObject $decodedObject): string
     {
         $hydrationLogic = '';

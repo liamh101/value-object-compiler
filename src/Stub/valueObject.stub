@@ -25,6 +25,7 @@ readonly class {{ClassName}}
 
     public static function hydrate(array $data): self
     {
+        {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
 }

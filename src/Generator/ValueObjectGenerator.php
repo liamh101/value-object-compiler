@@ -31,6 +31,7 @@ class ValueObjectGenerator implements FileGenerator
                     $object->name,
                     $this->decodedObjectService->generateDocblock($object),
                     $this->decodedObjectService->generateParameters($object),
+                    $this->decodedObjectService->generateHydrationValidation($object),
                     $this->decodedObjectService->generateHydrationLogic($object),
                 ),
                 FileExtension::PHP
