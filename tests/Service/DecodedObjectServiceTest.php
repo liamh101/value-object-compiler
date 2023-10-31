@@ -82,6 +82,39 @@ class DecodedObjectServiceTest extends TestCase
     }
 
     /**
+     * @dataProvider parameterValidationProvider
+     */
+    public function testGenerateParameterValidation(DecodedObject $object, string $expectedValidation): void
+    {
+        $service = $this->createService();
+        $result = $service->generateHydrationValidation($object);
+
+        self::assertSame($expectedValidation, $result);
+    }
+
+    public static function parameterValidationProvider(): array
+    {
+        return [
+            'Single Required' => [
+                new DecodedObject('String', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING])]),
+                "if (isset(\$data['stringType'])) {" . PHP_EOL . "\t\tthrow new \RuntimeException('Missing required parameter');" . PHP_EOL . "}" . PHP_EOL,
+            ],
+            'Multiple Required' => [
+                new DecodedObject('String', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING]), new ObjectParameter('intType', 'intType', [ParameterType::INTEGER])]),
+                "if (isset(\$data['stringType'],\$data['intType'])) {" . PHP_EOL . "\t\tthrow new \RuntimeException('Missing required parameter');" . PHP_EOL . "}" . PHP_EOL,
+            ],
+            'Mixed Parameters' => [
+                new DecodedObject('String', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING]), new ObjectParameter('intType', 'intType', [ParameterType::INTEGER, ParameterType::NULL])]),
+                "if (isset(\$data['stringType'])) {" . PHP_EOL . "\t\tthrow new \RuntimeException('Missing required parameter');" . PHP_EOL . "}" . PHP_EOL,
+            ],
+            'Single Nullable' => [
+                new DecodedObject('String', [new ObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::NULL])]),
+                '',
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider parameterProvider
      */
     public function testGenerateParameter(DecodedObject $object, string $expectedParameter): void
