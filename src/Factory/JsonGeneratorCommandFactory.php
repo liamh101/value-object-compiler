@@ -4,7 +4,7 @@ namespace LiamH\Valueobjectgenerator\Factory;
 
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
+use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\Service\NameService;
 
@@ -25,9 +25,9 @@ class JsonGeneratorCommandFactory implements GeneratorFactory
         return new FileService();
     }
 
-    public function createDecodedObjectService(): DecodedObjectService
+    public function createDecodedObjectService(): JsonDecodedObjectService
     {
-        return new DecodedObjectService();
+        return new JsonDecodedObjectService();
     }
 
     public function createFileGenerator(): ValueObjectGenerator

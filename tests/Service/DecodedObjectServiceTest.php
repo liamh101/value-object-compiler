@@ -3,7 +3,7 @@
 namespace Service;
 
 use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
+use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 use PHPUnit\Framework\TestCase;
@@ -155,8 +155,8 @@ class DecodedObjectServiceTest extends TestCase
         ];
     }
 
-    private function createService(): DecodedObjectService
+    private function createService(): JsonDecodedObjectService
     {
-        return new DecodedObjectService();
+        return new JsonDecodedObjectService();
     }
 }

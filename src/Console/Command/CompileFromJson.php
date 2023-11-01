@@ -5,7 +5,7 @@ namespace LiamH\Valueobjectgenerator\Console\Command;
 use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
+use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\Service\NameService;
 use Symfony\Component\Console\Attribute\AsCommand;

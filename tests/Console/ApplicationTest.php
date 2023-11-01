@@ -13,6 +13,6 @@ class ApplicationTest extends TestCase
     {
         $application = new Application();
 
-        self::assertInstanceOf(CompileFromJson::class, $application->find( 'generate:json'));
+        self::assertInstanceOf(CompileFromJson::class, $application->find( 'compile:json'));
     }
 }

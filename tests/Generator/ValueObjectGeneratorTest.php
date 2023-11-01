@@ -4,7 +4,7 @@ namespace Generator;
 
 use LiamH\Valueobjectgenerator\Enum\ParameterType;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
+use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
 use LiamH\Valueobjectgenerator\Service\FileService;
 use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
 use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
@@ -16,7 +16,7 @@ class ValueObjectGeneratorTest extends TestCase
     {
         $object = new DecodedObject('HelloWorld', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
 
-        $objectService = $this->createMock(DecodedObjectService::class);
+        $objectService = $this->createMock(JsonDecodedObjectService::class);
         $objectService->expects($this->once())->method('generateDocblock')->with($object)->willReturn('Docblock');
         $objectService->expects($this->once())->method('generateParameters')->with($object)->willReturn('Parameter');
         $objectService->expects($this->once())->method('generateHydrationValidation')->with($object)->willReturn('HydrationValidation');
@@ -47,7 +47,7 @@ class ValueObjectGeneratorTest extends TestCase
                 new ObjectParameter('array', 'array', [ParameterType::ARRAY], [$subObject]),
             ]);
 
-        $objectService = $this->createMock(DecodedObjectService::class);
+        $objectService = $this->createMock(JsonDecodedObjectService::class);
         $objectService->expects($this->exactly(2))
             ->method('generateDocblock')
             ->willReturn('Docblock');
@@ -79,7 +79,7 @@ class ValueObjectGeneratorTest extends TestCase
             ]
         );
 
-        $objectService = $this->createMock(DecodedObjectService::class);
+        $objectService = $this->createMock(JsonDecodedObjectService::class);
         $objectService->expects($this->exactly(2))
             ->method('generateDocblock')
             ->willReturn('Docblock');
