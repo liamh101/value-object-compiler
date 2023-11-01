@@ -9,6 +9,6 @@ use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
 interface GeneratorFactory
 {
     public function createSourceGenerator(): SourceGenerator;
-    public function createFileGenerator(): FileGenerator;
+    public function createFileGenerator(string $outputDirectory): FileGenerator;
     public function createDecodedObjectService(): DecodedObjectService;
 }

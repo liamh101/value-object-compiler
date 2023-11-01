@@ -14,6 +14,12 @@ class FileService
     /** @var string[] */
     private array $cacheFiles = [];
 
+    public function __construct(
+        private readonly string $outputDirectory,
+    ) {
+        $this->validateOutputDirectory();
+    }
+
     public function populateValueObjectFile(
         string $className,
         string $docblock,
@@ -60,7 +66,7 @@ class FileService
 
     public function writeFile(GeneratedFile $file): true
     {
-        $result = file_put_contents($file->getFullFileName(), $file->contents);
+        $result = @file_put_contents($this->outputDirectory . $file->getFullFileName(), $file->contents);
 
         if (!$result) {
             throw FileException::cannotWriteFile($file->name);
@@ -88,16 +94,24 @@ class FileService
         return $contents;
     }
 
-
     private function formatFile(GeneratedFile $file): true
     {
-        $process = new Process(['vendor/bin/phpcbf', '-q', '--standard=PSR12', $file->getFullFileName()]);
+        $process = new Process(['vendor/bin/phpcbf', '-q', '--standard=PSR12', $this->outputDirectory . $file->getFullFileName()]);
         $process->run();
 
         // A successful run is deemed unsuccessful
 //        if (!$process->isSuccessful()) {
 //            throw FileException::couldNotFormatFile($file->name, $process->getOutput());
 //        }
+
+        return true;
+    }
+
+    private function validateOutputDirectory(): true
+    {
+        if (!str_ends_with($this->outputDirectory, '/')) {
+            throw FileException::invalidOutputDirectory();
+        }
 
         return true;
     }

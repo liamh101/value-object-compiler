@@ -10,7 +10,15 @@ use PHPUnit\Framework\TestCase;
 
 class FileServiceTest extends TestCase
 {
-    private const TEST_FILE_LOCATION = './build/TestFile';
+    private const TEST_FILE_LOCATION = './build/';
+
+    public function testInvalidOutputDir(): void
+    {
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessage('Invalid output directory provided');
+
+        new FileService('Invalid');
+    }
 
     public function testGetValueObjectFile(): void
     {
@@ -74,11 +82,21 @@ readonly class {{ClassName}}
 
     public function testWriteContents(): void
     {
-        $file = new GeneratedFile(self::TEST_FILE_LOCATION, 'Hello world!', FileExtension::PHP);
+        $file = new GeneratedFile('TestFile', 'Hello world!', FileExtension::PHP);
 
         $service = $this->createService();
         self::assertTrue($service->writeFile($file));
         self::assertSame('Hello world!', file_get_contents('./build/TestFile.php'));
+    }
+
+    public function testWriteInvalidContents(): void
+    {
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessage('Cannot create file TestFile');
+        $file = new GeneratedFile('TestFile', 'Hello world!', FileExtension::PHP);
+
+        $service = new FileService('./nonexistantFolder/');
+        self::assertTrue($service->writeFile($file));
     }
 
     /**
@@ -170,6 +188,6 @@ readonly class ClassNameReplacement
 
     private function createService(): FileService
     {
-        return new FileService();
+        return new FileService(self::TEST_FILE_LOCATION);
     }
 }

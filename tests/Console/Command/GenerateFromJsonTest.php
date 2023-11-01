@@ -64,6 +64,78 @@ class GenerateFromJsonTest extends TestCase
         self::assertSame(0, $result);
     }
 
+    public function testGetCustomOutputDirectoryDefault(): void
+    {
+        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $method = $reflection->getMethod('getOutputDirectory');
+        $method->setAccessible(true);
+
+        $inputInterface = $this->createMock(InputInterface::class);
+        $inputInterface->expects($this->once())
+            ->method('getOption')
+            ->with('outputDir')
+            ->willReturn(null);
+
+        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $result = $method->invokeArgs($command, [$inputInterface]);
+
+        self::assertSame('./', $result);
+    }
+
+    public function testGetCustomOutputDirectoryEmpty(): void
+    {
+        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $method = $reflection->getMethod('getOutputDirectory');
+        $method->setAccessible(true);
+
+        $inputInterface = $this->createMock(InputInterface::class);
+        $inputInterface->expects($this->once())
+            ->method('getOption')
+            ->with('outputDir')
+            ->willReturn('');
+
+        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $result = $method->invokeArgs($command, [$inputInterface]);
+
+        self::assertSame('./', $result);
+    }
+
+    public function testGetCustomOutputDirectoryProvided(): void
+    {
+        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $method = $reflection->getMethod('getOutputDirectory');
+        $method->setAccessible(true);
+
+        $inputInterface = $this->createMock(InputInterface::class);
+        $inputInterface->expects($this->once())
+            ->method('getOption')
+            ->with('outputDir')
+            ->willReturn('/etc/testdir/');
+
+        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $result = $method->invokeArgs($command, [$inputInterface]);
+
+        self::assertSame('/etc/testdir/', $result);
+    }
+
+    public function testGetCustomOutputDirectoryProvidedMissingSlash(): void
+    {
+        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $method = $reflection->getMethod('getOutputDirectory');
+        $method->setAccessible(true);
+
+        $inputInterface = $this->createMock(InputInterface::class);
+        $inputInterface->expects($this->once())
+            ->method('getOption')
+            ->with('outputDir')
+            ->willReturn('/etc/testdir');
+
+        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $result = $method->invokeArgs($command, [$inputInterface]);
+
+        self::assertSame('/etc/testdir/', $result);
+    }
+
     private function createMockFactory(): JsonGeneratorCommandFactory
     {
         $factory = $this->createMock(JsonGeneratorCommandFactory::class);

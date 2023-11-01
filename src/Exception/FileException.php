@@ -20,4 +20,9 @@ final class FileException extends Exception
     {
         return new FileException('Could not format file ' . $filename . ': ' . $output);
     }
+
+    public static function invalidOutputDirectory(): self
+    {
+        return new FileException('Invalid output directory provided');
+    }
 }

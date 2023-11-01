@@ -20,9 +20,9 @@ class JsonGeneratorCommandFactory implements GeneratorFactory
         return new JsonGenerator($this->createNameService());
     }
 
-    public function createFileService(): FileService
+    public function createFileService(string $outputDirectory): FileService
     {
-        return new FileService();
+        return new FileService($outputDirectory);
     }
 
     public function createDecodedObjectService(): JsonDecodedObjectService
@@ -30,8 +30,8 @@ class JsonGeneratorCommandFactory implements GeneratorFactory
         return new JsonDecodedObjectService();
     }
 
-    public function createFileGenerator(): ValueObjectGenerator
+    public function createFileGenerator(string $outputDirectory): ValueObjectGenerator
     {
-        return new ValueObjectGenerator($this->createDecodedObjectService(), $this->createFileService());
+        return new ValueObjectGenerator($this->createDecodedObjectService(), $this->createFileService($outputDirectory));
     }
 }
