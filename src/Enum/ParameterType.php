@@ -20,7 +20,7 @@ enum ParameterType: string
             self::FLOAT => 'float',
             self::ARRAY => 'array',
             self::OBJECT => '',
-            self::NULL => '?',
+            self::NULL => 'null',
             self::BOOLEAN => 'bool',
         };
     }

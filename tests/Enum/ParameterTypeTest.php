@@ -24,7 +24,7 @@ class ParameterTypeTest extends TestCase
             'float' => [ParameterType::FLOAT, 'float'],
             'array' => [ParameterType::ARRAY, 'array'],
             'object' => [ParameterType::OBJECT, ''],
-            'null' => [ParameterType::NULL, '?'],
+            'null' => [ParameterType::NULL, 'null'],
             'boolean' => [ParameterType::BOOLEAN, 'bool'],
         ];
     }

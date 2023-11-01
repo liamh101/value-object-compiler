@@ -8,6 +8,8 @@ use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
 
 class DecodedObjectService
 {
+    private const NULLABLE = '?';
+
     public function generateParameters(DecodedObject $decodedObject): string
     {
         $parameters = '';
@@ -32,19 +34,19 @@ class DecodedObjectService
 
         foreach ($decodedObject->getOptionalParameters() as $optionalParameter) {
             $parameters .= 'public ';
-            $multipleTypes = false;
+            $multipleTypes = count($optionalParameter->types) > 2;
             $hasArray = false;
 
             if (count($optionalParameter->types) === 1 && $optionalParameter->hasType(ParameterType::NULL)) {
                 $parameters .= '?mixed';
             }
 
-            foreach ($optionalParameter->types as $type) {
-                if ($type === ParameterType::NULL) {
+            foreach ($optionalParameter->types as $key => $type) {
+                if ($type === ParameterType::NULL && !$multipleTypes) {
                     continue;
                 }
 
-                if ($multipleTypes) {
+                if ($multipleTypes && $key > 0) {
                     $parameters .= '|';
                 }
 
@@ -52,13 +54,16 @@ class DecodedObjectService
                     $hasArray = true;
                 }
 
+                if (!$multipleTypes) {
+                    $parameters .= self::NULLABLE;
+                }
+
                 if ($type === ParameterType::OBJECT && $optionalParameter->subObject) {
-                    $parameters .= ParameterType::NULL->getDefinitionName() . $optionalParameter->subObject->name;
+                    $parameters .= $optionalParameter->subObject->name;
                     continue;
                 }
 
-                $parameters .= ParameterType::NULL->getDefinitionName() . $type->getDefinitionName();
-                $multipleTypes = true;
+                $parameters .= $type->getDefinitionName();
             }
 
             $parameters .= ' $' . $optionalParameter->formattedName;
