@@ -169,48 +169,6 @@ class JsonGeneratorTest extends TestCase
         self::assertNull($result->subObject);
     }
 
-    public function testUpdateExistingParameter(): void
-    {
-        $reflection = new \ReflectionClass(JsonGenerator::class);
-        $method = $reflection->getMethod('updateExistingParameter');
-        $method->setAccessible(true);
-
-        $objectParameter= new ObjectParameter(
-            'test Object',
-            'testObject',
-            [ParameterType::STRING],
-        );
-
-        $generator = $this->createGenerator();
-
-        $result = $method->invokeArgs($generator, [$objectParameter, ParameterType::INTEGER]);
-
-        self::assertSame('test Object', $result->originalName);
-        self::assertSame('testObject', $result->formattedName);
-        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->types);
-    }
-
-    public function testUpdateExistingParameterDuplicateParameter(): void
-    {
-        $reflection = new \ReflectionClass(JsonGenerator::class);
-        $method = $reflection->getMethod('updateExistingParameter');
-        $method->setAccessible(true);
-
-        $objectParameter = new ObjectParameter(
-            'test Object',
-            'testObject',
-            [ParameterType::STRING],
-        );
-
-        $generator = $this->createGenerator();
-
-        $result = $method->invokeArgs($generator, [$objectParameter, ParameterType::STRING]);
-
-        self::assertSame('test Object', $result->originalName);
-        self::assertSame('testObject', $result->formattedName);
-        self::assertSame([ParameterType::STRING], $result->types);
-    }
-
     /**
      * @dataProvider singleLevelObjectProvider
      */

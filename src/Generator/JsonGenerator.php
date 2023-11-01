@@ -40,11 +40,6 @@ class JsonGenerator implements SourceGenerator
             $parameter = ParameterType::from(gettype($value));
             $parameterName = $this->nameService->createVariableName($name);
 
-            if (isset($parameters[$parameterName])) {
-                $parameters[$parameterName] = $this->updateExistingParameter($parameters[$parameterName], $parameter);
-                continue;
-            }
-
             if ($parameter === ParameterType::ARRAY && is_array($value)) {
                 $parameters[$parameterName] = $this->handleArrayType($value, $name, $parameterName);
                 continue;
@@ -131,23 +126,6 @@ class JsonGenerator implements SourceGenerator
             formattedName: $formattedName,
             types: [ParameterType::ARRAY],
             arrayTypes: [(new ObjectReducer($objects))->reduceObjects()],
-        );
-    }
-
-    private function updateExistingParameter(ObjectParameter $parameter, ParameterType $newType): ObjectParameter
-    {
-        if ($parameter->hasType($newType)) {
-            return $parameter;
-        }
-
-        $types = $parameter->types;
-        $types[] = $newType;
-
-        return new ObjectParameter(
-            originalName: $parameter->originalName,
-            formattedName: $parameter->formattedName,
-            types: $types,
-            subObject: $parameter->subObject,
         );
     }
 
