@@ -96,7 +96,7 @@ class JsonDecodedObjectService implements DecodedObjectService
                 $hydrationValidation .= ',';
             }
 
-            $hydrationValidation .= '$data[\'' . $requiredParameter->formattedName . '\']';
+            $hydrationValidation .= '$data[\'' . $requiredParameter->originalName . '\']';
 
             $multipleParameters = true;
         }
