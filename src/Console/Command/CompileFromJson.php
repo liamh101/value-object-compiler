@@ -13,8 +13,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'generate:json', description: 'Generate Value Objects from a JSON file')]
-class GenerateFromJson extends Command
+#[AsCommand(name: 'compile:json', description: 'Compile Value Objects from a JSON file')]
+class CompileFromJson extends Command
 {
     private readonly JsonGeneratorCommandFactory $factory;
 

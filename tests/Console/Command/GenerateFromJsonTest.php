@@ -2,7 +2,7 @@
 
 namespace Console\Command;
 
-use LiamH\Valueobjectgenerator\Console\Command\GenerateFromJson;
+use LiamH\Valueobjectgenerator\Console\Command\CompileFromJson;
 use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
 use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
 use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
@@ -16,7 +16,7 @@ class GenerateFromJsonTest extends TestCase
 {
     public function testCommand(): void
     {
-        $reflection = new \ReflectionClass(GenerateFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('execute');
         $method->setAccessible(true);
 
@@ -32,7 +32,7 @@ class GenerateFromJsonTest extends TestCase
         $outputInterface->expects($this->exactly(2))
             ->method('writeln');
 
-        $command = new GenerateFromJson(null, $factoryMock);
+        $command = new CompileFromJson(null, $factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
@@ -43,7 +43,7 @@ class GenerateFromJsonTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $reflection = new \ReflectionClass(GenerateFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('execute');
         $method->setAccessible(true);
 
@@ -57,7 +57,7 @@ class GenerateFromJsonTest extends TestCase
 
         $outputInterface = $this->createMock(OutputInterface::class);
 
-        $command = new GenerateFromJson(null, $factoryMock);
+        $command = new CompileFromJson(null, $factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
