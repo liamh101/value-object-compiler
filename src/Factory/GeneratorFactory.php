@@ -1,10 +1,10 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Factory;
+namespace LiamH\ValueObjectCompiler\Factory;
 
-use LiamH\Valueobjectgenerator\Generator\FileGenerator;
-use LiamH\Valueobjectgenerator\Generator\SourceGenerator;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
+use LiamH\ValueObjectCompiler\Generator\FileGenerator;
+use LiamH\ValueObjectCompiler\Generator\SourceGenerator;
+use LiamH\ValueObjectCompiler\Service\DecodedObjectService;
 
 interface GeneratorFactory
 {

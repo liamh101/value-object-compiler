@@ -1,10 +1,10 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Service;
+namespace LiamH\ValueObjectCompiler\Service;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 
 class JsonDecodedObjectService implements DecodedObjectService
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Service;
+namespace LiamH\ValueObjectCompiler\Service;
 
-use LiamH\Valueobjectgenerator\Exception\FileException;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
+use LiamH\ValueObjectCompiler\Exception\FileException;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
 use Symfony\Component\Process\Process;
 
 class FileService

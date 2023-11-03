@@ -1,8 +1,8 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\ValueObject;
+namespace LiamH\ValueObjectCompiler\ValueObject;
 
-use LiamH\Valueobjectgenerator\Enum\FileExtension;
+use LiamH\ValueObjectCompiler\Enum\FileExtension;
 
 readonly class GeneratedFile
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Enum;
+namespace LiamH\ValueObjectCompiler\Enum;
 
 enum ParameterType: string
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Console\Command;
+namespace LiamH\ValueObjectCompiler\Console\Command;
 
-use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
-use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
-use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\Service\NameService;
+use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\Service\NameService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

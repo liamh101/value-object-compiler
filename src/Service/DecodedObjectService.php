@@ -1,8 +1,8 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Service;
+namespace LiamH\ValueObjectCompiler\Service;
 
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 
 interface DecodedObjectService
 {

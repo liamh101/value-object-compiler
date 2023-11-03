@@ -1,8 +1,8 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\ValueObject;
+namespace LiamH\ValueObjectCompiler\ValueObject;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
 
 readonly class ObjectParameter
 {

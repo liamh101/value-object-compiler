@@ -1,12 +1,12 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Factory;
+namespace LiamH\ValueObjectCompiler\Factory;
 
-use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
-use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\Service\NameService;
+use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\Service\NameService;
 
 class JsonGeneratorCommandFactory implements GeneratorFactory
 {

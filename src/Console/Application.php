@@ -1,9 +1,9 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Console;
+namespace LiamH\ValueObjectCompiler\Console;
 
-use LiamH\Valueobjectgenerator\Console\Command\CompileFromJson;
-use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Console\Command\CompileFromJson;
+use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
 use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication

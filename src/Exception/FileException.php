@@ -1,6 +1,6 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Exception;
+namespace LiamH\ValueObjectCompiler\Exception;
 
 use Exception;
 

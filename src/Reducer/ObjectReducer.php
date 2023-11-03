@@ -1,11 +1,11 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Reducer;
+namespace LiamH\ValueObjectCompiler\Reducer;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\Exception\ObjectReducerException;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Exception\ObjectReducerException;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 
 class ObjectReducer
 {

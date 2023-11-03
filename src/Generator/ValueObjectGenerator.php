@@ -1,12 +1,12 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Generator;
+namespace LiamH\ValueObjectCompiler\Generator;
 
-use LiamH\Valueobjectgenerator\Enum\FileExtension;
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
+use LiamH\ValueObjectCompiler\Enum\FileExtension;
+use LiamH\ValueObjectCompiler\Service\DecodedObjectService;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
 
 class ValueObjectGenerator implements FileGenerator
 {

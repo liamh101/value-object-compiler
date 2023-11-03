@@ -1,6 +1,6 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Service;
+namespace LiamH\ValueObjectCompiler\Service;
 
 class NameService
 {

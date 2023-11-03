@@ -1,8 +1,8 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Generator;
+namespace LiamH\ValueObjectCompiler\Generator;
 
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 
 interface SourceGenerator
 {

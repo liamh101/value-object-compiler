@@ -1,12 +1,12 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Generator;
+namespace LiamH\ValueObjectCompiler\Generator;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\Reducer\ObjectReducer;
-use LiamH\Valueobjectgenerator\Service\NameService;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Reducer\ObjectReducer;
+use LiamH\ValueObjectCompiler\Service\NameService;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 
 class JsonGenerator implements SourceGenerator
 {

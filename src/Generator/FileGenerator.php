@@ -1,10 +1,10 @@
 <?php
 
-namespace LiamH\Valueobjectgenerator\Generator;
+namespace LiamH\ValueObjectCompiler\Generator;
 
-use LiamH\Valueobjectgenerator\Service\DecodedObjectService;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\Service\DecodedObjectService;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 
 interface FileGenerator
 {

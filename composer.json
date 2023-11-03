@@ -3,7 +3,7 @@
     "description": "Generate Value Objects from JSON and XML",
     "autoload": {
         "psr-4": {
-            "LiamH\\Valueobjectgenerator\\": "src/"
+            "LiamH\\ValueObjectCompiler\\": "src/"
         }
     },
     "authors": [
@@ -22,7 +22,7 @@
         "doctrine/coding-standard": "^12.0",
         "phpunit/phpunit": "^10.4"
     },
-    "bin": ["ValueObjectGenerator"],
+    "bin": ["ValueObjectCompiler"],
     "config": {
         "allow-plugins": false
     }
