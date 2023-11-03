@@ -1,5 +1,5 @@
 {
-    "name": "liamh101/valueobjectgenerator",
+    "name": "liamh/valueobjectcompiler",
     "description": "Generate Value Objects from JSON and XML",
     "autoload": {
         "psr-4": {
@@ -14,7 +14,7 @@
     "require": {
         "php": "^8.2",
         "symfony/console": "*",
-        "symfony/process": "^6.3"
+        "symfony/process": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
