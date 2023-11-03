@@ -1,5 +1,7 @@
 # Value Object Compiler
 
+*This is currently in Alpha*
+
 This package takes a source file, such as JSON and creates strict typed, PSR12, readonly Value Objects.
 
 The aim is to slowly support more file formats with the same file output. 
