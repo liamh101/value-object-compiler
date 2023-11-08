@@ -1,6 +1,6 @@
 {
     "name": "liamh/valueobjectcompiler",
-    "description": "Generate Value Objects from JSON and XML",
+    "description": "Compile strict type, read only value objects from JSON",
     "autoload": {
         "psr-4": {
             "LiamH\\ValueObjectCompiler\\": "src/"
