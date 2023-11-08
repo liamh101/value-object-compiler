@@ -1,6 +1,7 @@
 {
     "name": "liamhackett/valueobjectcompiler",
     "description": "Compile strict type, read only value objects from JSON",
+    "type": "library",
     "autoload": {
         "psr-4": {
             "LiamH\\ValueObjectCompiler\\": "src/"
