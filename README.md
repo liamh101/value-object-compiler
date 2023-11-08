@@ -8,6 +8,8 @@ The aim is to slowly support more file formats with the same file output.
 
 ## Installation
 
+`composer require --dev liamhackett/valueobjectcompiler`
+
 ## How To Use
 
 ### Single JSON file Compiler
