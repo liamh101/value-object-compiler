@@ -1,5 +1,5 @@
 {
-    "name": "liamh/valueobjectcompiler",
+    "name": "liamhackett/valueobjectcompiler",
     "description": "Compile strict type, read only value objects from JSON",
     "autoload": {
         "psr-4": {
