@@ -2,10 +2,10 @@
 
 namespace Service;
 
-use LiamH\Valueobjectgenerator\Enum\FileExtension;
-use LiamH\Valueobjectgenerator\Exception\FileException;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
+use LiamH\ValueObjectCompiler\Enum\FileExtension;
+use LiamH\ValueObjectCompiler\Exception\FileException;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
 use PHPUnit\Framework\TestCase;
 
 class FileServiceTest extends TestCase

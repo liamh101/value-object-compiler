@@ -2,7 +2,7 @@
 
 namespace Exception;
 
-use LiamH\Valueobjectgenerator\Exception\FileException;
+use LiamH\ValueObjectCompiler\Exception\FileException;
 use PHPUnit\Framework\TestCase;
 
 class FileExceptionTest extends TestCase

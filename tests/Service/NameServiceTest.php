@@ -2,8 +2,8 @@
 
 namespace Service;
 
-use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
-use LiamH\Valueobjectgenerator\Service\NameService;
+use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Service\NameService;
 use PHPUnit\Framework\TestCase;
 
 class NameServiceTest extends TestCase

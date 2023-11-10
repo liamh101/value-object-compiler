@@ -2,12 +2,12 @@
 
 namespace Console\Command;
 
-use LiamH\Valueobjectgenerator\Console\Command\CompileFromJson;
-use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
-use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
-use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
-use LiamH\Valueobjectgenerator\Service\FileService;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\Console\Command\CompileFromJson;
+use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

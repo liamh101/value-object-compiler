@@ -2,13 +2,13 @@
 
 namespace Reducer;
 
-use LiamH\Valueobjectgenerator\Enum\FileExtension;
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\Exception\ObjectReducerException;
-use LiamH\Valueobjectgenerator\Reducer\ObjectReducer;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\GeneratedFile;
-use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\Enum\FileExtension;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Exception\ObjectReducerException;
+use LiamH\ValueObjectCompiler\Reducer\ObjectReducer;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
+use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 use PHPUnit\Framework\TestCase;
 
 class ObjectReducerTest extends TestCase
@@ -36,8 +36,8 @@ class ObjectReducerTest extends TestCase
 
     public function testPassInvalidObjectType(): void
     {
-        self::expectException(ObjectReducerException::class);
-        self::expectExceptionMessage('Object reducer requires DecodedObject. LiamH\Valueobjectgenerator\ValueObject\GeneratedFile passed');
+        $this->expectException(ObjectReducerException::class);
+        $this->expectExceptionMessage('Object reducer requires DecodedObject. LiamH\ValueObjectCompiler\ValueObject\GeneratedFile passed');
 
         $decodedObjectArray = [new DecodedObject('Hello World', []), new GeneratedFile('Test', 'hello', FileExtension::PHP)];
 

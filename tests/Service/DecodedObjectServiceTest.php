@@ -2,10 +2,10 @@
 
 namespace Service;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
-use LiamH\Valueobjectgenerator\Service\JsonDecodedObjectService;
-use LiamH\Valueobjectgenerator\ValueObject\DecodedObject;
-use LiamH\Valueobjectgenerator\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
+use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 use PHPUnit\Framework\TestCase;
 
 class DecodedObjectServiceTest extends TestCase

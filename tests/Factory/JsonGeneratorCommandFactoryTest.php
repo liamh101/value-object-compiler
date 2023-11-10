@@ -2,9 +2,9 @@
 
 namespace Factory;
 
-use LiamH\Valueobjectgenerator\Factory\JsonGeneratorCommandFactory;
-use LiamH\Valueobjectgenerator\Generator\JsonGenerator;
-use LiamH\Valueobjectgenerator\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
 use PHPUnit\Framework\TestCase;
 
 class JsonGeneratorCommandFactoryTest extends TestCase

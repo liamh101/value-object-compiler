@@ -2,7 +2,7 @@
 
 namespace Enum;
 
-use LiamH\Valueobjectgenerator\Enum\ParameterType;
+use LiamH\ValueObjectCompiler\Enum\ParameterType;
 use PHPUnit\Framework\TestCase;
 
 class ParameterTypeTest extends TestCase
