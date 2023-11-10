@@ -23,7 +23,7 @@
         "doctrine/coding-standard": "^12.0",
         "phpunit/phpunit": "^10.4"
     },
-    "bin": ["ValueObjectCompiler"],
+    "bin": ["valueobjectcompiler"],
     "config": {
         "allow-plugins": false
     },
