@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 
 class FileService
 {
-    private const STUB_LOCATION = 'src/Stub/';
+    private const STUB_LOCATION = '/../Stub/';
 
     /** @var string[] */
     private array $cacheFiles = [];
@@ -83,7 +83,7 @@ class FileService
             return $this->cacheFiles['valueObject'];
         }
 
-        $contents = file_get_contents(self::STUB_LOCATION . 'valueObject.stub');
+        $contents = file_get_contents( __DIR__ . self::STUB_LOCATION . 'valueObject.stub');
 
         if (!$contents) {
             throw FileException::fileNotFound('valueObject.stub');
