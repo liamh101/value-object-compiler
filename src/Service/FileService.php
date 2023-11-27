@@ -83,7 +83,7 @@ class FileService
             return $this->cacheFiles['valueObject'];
         }
 
-        $contents = file_get_contents( __DIR__ . self::STUB_LOCATION . 'valueObject.stub');
+        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . 'valueObject.stub');
 
         if (!$contents) {
             throw FileException::fileNotFound('valueObject.stub');

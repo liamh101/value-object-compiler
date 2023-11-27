@@ -23,6 +23,21 @@ class JsonGenerator implements SourceGenerator
             throw new \RuntimeException('Invalid JSON provided');
         }
 
+        $initialKeys = array_keys($formattedJson);
+
+        if (isset($initialKeys[0]) && is_int($initialKeys[0])) {
+            $arrayObjects = $this->handleArrayType($formattedJson, $parentName, $parentName);
+
+            $decodedObject = $arrayObjects->arrayTypes[0];
+
+            if (!$decodedObject instanceof DecodedObject) {
+                throw new \RuntimeException('Invalid JSON provided');
+            }
+
+            return $decodedObject;
+        }
+
+
         return $this->generateObject($parentName, $formattedJson);
     }
 

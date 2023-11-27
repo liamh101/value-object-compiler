@@ -320,6 +320,23 @@ class JsonGeneratorTest extends TestCase
         self::assertSame([ParameterType::STRING], $result->parameters['name']->types);
     }
 
+    public function testGenerateClassFromSourceValidArrayJson(): void
+    {
+        $generator = $this->createGenerator();
+
+        $result = $generator->generateClassFromSource('ValidArrayJson', '[{"Name": "Valid JSON"}, {"Name": "Valid JSON 2", "Type": "Additional"}]');
+        self::assertSame('ValidArrayJson', $result->name);
+        self::assertCount(2, $result->parameters);
+
+        self::assertSame('name', $result->parameters['name']->formattedName);
+        self::assertSame('Name', $result->parameters['name']->originalName);
+        self::assertSame([ParameterType::STRING], $result->parameters['name']->types);
+
+        self::assertSame('type', $result->parameters['type']->formattedName);
+        self::assertSame('Type', $result->parameters['type']->originalName);
+        self::assertSame([ParameterType::STRING, ParameterType::NULL], $result->parameters['type']->types);
+    }
+
     public function testGenerateClassFromSourceInvalidJson(): void
     {
         $generator = $this->createGenerator();
