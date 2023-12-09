@@ -1,5 +1,12 @@
 # Value Object Compiler
 
+[![Source Code][badge-source]][source]
+[![Latest Version][badge-release]][release]
+[![Software License][badge-license]][license]
+[![PHP Version][badge-php]][php]
+[![Coverage Status][badge-coverage]][coverage]
+[![Build][badge-build]][build]
+
 *This is currently in Alpha*
 
 This package takes a source file, such as JSON and creates strict typed, PSR12, readonly Value Objects.
@@ -125,3 +132,18 @@ readonly class SubObject
     }
 }
 ```
+[badge-source]: https://img.shields.io/badge/source-liamhackett/valueobjectcompiler-blue.svg?style=flat-square
+[badge-release]: https://img.shields.io/packagist/v/liamhackett/valueobjectcompiler.svg?style=flat-square&label=release
+[badge-license]: https://img.shields.io/packagist/l/liamhackett/valueobjectcompiler.svg?style=flat-square
+[badge-php]: https://img.shields.io/packagist/php-v/liamhackett/valueobjectcompiler.svg?style=flat-square
+[badge-coverage]: https://img.shields.io/coveralls/github/liamh101/value-object-compiler/master.svg?style=flat-square
+[badge-build]: https://img.shields.io/github/actions/workflow/status/liamh101/value-object-compiler/actions.yml?style=flat-square
+
+[source]: https://github.com/liamh101/value-object-compiler
+[release]: https://packagist.org/packages/liamhackett/valueobjectcompiler
+[php]: https://php.net
+[composer]: http://getcomposer.org/
+[conduct]: https://github.com/liamh101/value-object-compiler/blob/master/.github/CODE_OF_CONDUCT.md
+[license]: https://github.com/liamh101/value-object-compiler/blob/master/LICENSE
+[coverage]: https://coveralls.io/repos/github/liamh101/value-object-compiler?branch=master
+[build]: https://github.com/liamh101/value-object-compiler/actions?query=event%3Apush+workflow%3ABuild+branch%3Amaster
