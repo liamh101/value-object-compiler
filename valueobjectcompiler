@@ -11,8 +11,8 @@ set_error_handler(static function ($severity, $message, $file, $line) {
 
 // check environment requirements
 (static function () {
-    if (\PHP_VERSION_ID < 70400) {
-        fwrite(STDERR, "PHP needs to be a minimum version of PHP 7.4.0 and maximum version of PHP 8.2.*.\n");
+    if (\PHP_VERSION_ID < 80200) {
+        fwrite(STDERR, "PHP needs to be a minimum version of PHP 8.2.0 and maximum version of PHP 8.3.*.\n");
         fwrite(STDERR, 'Current PHP version: '.PHP_VERSION.".\n");
     }
 })();
