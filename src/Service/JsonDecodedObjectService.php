@@ -170,7 +170,7 @@ class JsonDecodedObjectService implements DecodedObjectService
         foreach ($decodedObject->parameters as $parameter) {
             if (count($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
                 $hasDocblock = true;
-                $docblock .= PHP_EOL . "\t " . '* @var ';
+                $docblock .= PHP_EOL . '     ' . '* @param ';
                 $isNullable = $parameter->hasArrayType(ParameterType::NULL);
                 $types = 0;
                 $totalTypes = count($parameter->arrayTypes);
@@ -211,7 +211,7 @@ class JsonDecodedObjectService implements DecodedObjectService
             return '';
         }
 
-        $docblock .= PHP_EOL . "\t " . '*/';
+        $docblock .= PHP_EOL . '     ' . '*/';
         return $docblock;
     }
 }
