@@ -6,7 +6,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip
 
-RUN pecl install xdebug-3.2.2 \
+ARG PHP_XDEBUG_VERSION
+
+RUN pecl install xdebug-${PHP_XDEBUG_VERSION} \
     && docker-php-ext-enable xdebug
 
 RUN docker-php-ext-install zip
