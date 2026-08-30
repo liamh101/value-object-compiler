@@ -61,6 +61,10 @@ class FileService
     {
         preg_match('/[\w-]+\./', $path, $matches);
 
+        if (!isset($matches[0])) {
+            throw FileException::fileNotFound($path);
+        }
+
         return str_replace('.', '', $matches[0]);
     }
 

@@ -64,8 +64,8 @@ class ObjectReducer
                         originalName: $parameter->originalName,
                         formattedName: $parameter->formattedName,
                         types: $parameter->types,
-                        subObject: (new ObjectReducer([$parameter->subObject, $this->masterParameters[$parameterName]->subObject]))->reduceObjects(),
                         arrayTypes: $parameter->arrayTypes,
+                        subObject: (new ObjectReducer([$parameter->subObject, $this->masterParameters[$parameterName]->subObject]))->reduceObjects(),
                     );
                     continue;
                 }

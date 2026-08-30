@@ -131,8 +131,6 @@ class JsonDecodedObjectService implements DecodedObjectService
 
     private function generateParameterHydration(ObjectParameter $objectParameter, bool $optionalParameter): string
     {
-        $hydrationLogic = '';
-
         if ($objectParameter->subObject && $objectParameter->hasType(ParameterType::OBJECT)) {
             if ($optionalParameter) {
                 return $objectParameter->formattedName . ': isset($data[\'' . $objectParameter->originalName . '\']) ? ' . $objectParameter->subObject->name . '::hydrate($data[\'' . $objectParameter->originalName . '\']) : null,' . PHP_EOL;
