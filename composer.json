@@ -15,7 +15,8 @@
     "require": {
         "php": "^8.2||^8.3",
         "symfony/console": "*",
-        "symfony/process": "*"
+        "symfony/process": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

@@ -1,0 +1,91 @@
+<?php
+
+namespace LiamH\ValueObjectCompiler\Console\Command;
+
+use LiamH\ValueObjectCompiler\Factory\XmlGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Generator\XmlGenerator;
+use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Service\FileService;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+#[AsCommand(name: 'compile:xml', description: 'Compile Value Objects from an XML file')]
+class CompileFromXml extends Command
+{
+    private const DEFAULT_OUTPUT_DIR = './';
+    private readonly XmlGeneratorCommandFactory $factory;
+
+    private XmlGenerator $xmlGenerator;
+    private ValueObjectGenerator $valueObjectGenerator;
+    private FileService $fileService;
+
+    private string $outputDir;
+
+    public function __construct(string $name = null, XmlGeneratorCommandFactory $factory)
+    {
+        $this->factory = $factory;
+        parent::__construct($name);
+    }
+
+    protected function configure(): void
+    {
+        $this
+            ->addArgument(name: 'sourceFile', description: 'path to file to be scanned')
+            ->addOption(name: 'outputDir', mode: InputOption::VALUE_REQUIRED, description: 'Where compiled Value Objects are written to');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $this->outputDir = $this->getOutputDirectory($input);
+
+        $this->createServices();
+
+        $fileLocation = $input->getArgument('sourceFile');
+
+        if (!is_string($fileLocation)) {
+            throw new \RuntimeException('Source File not defined');
+        }
+
+        $contents = $this->fileService->getFileContentsFromPath($fileLocation);
+
+        $output->writeln('Decoding Source File');
+
+        $result = $this->xmlGenerator->generateClassFromSource(
+            $this->fileService->getFileNameFromPath($fileLocation),
+            $contents
+        );
+
+        die(var_dump($result));
+
+        $output->writeln('Writing to Files');
+
+        $this->valueObjectGenerator->createFiles($result);
+
+        return Command::SUCCESS;
+    }
+
+    private function getOutputDirectory(InputInterface $input): string
+    {
+        $dir = $input->getOption('outputDir');
+
+        if (!is_string($dir) || $dir === '') {
+            return self::DEFAULT_OUTPUT_DIR;
+        }
+
+        if (!str_ends_with($dir, '/')) {
+            $dir .= '/';
+        }
+
+        return $dir;
+    }
+
+    private function createServices(): void
+    {
+        $this->xmlGenerator = $this->factory->createSourceGenerator();
+        $this->valueObjectGenerator = $this->factory->createFileGenerator($this->outputDir);
+        $this->fileService = $this->factory->createFileService($this->outputDir);
+    }
+}
