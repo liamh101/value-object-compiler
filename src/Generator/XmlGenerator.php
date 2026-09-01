@@ -6,7 +6,7 @@ use LiamH\ValueObjectCompiler\Enum\ParameterType;
 use LiamH\ValueObjectCompiler\Reducer\ObjectReducer;
 use LiamH\ValueObjectCompiler\Service\NameService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
-use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
 use SimpleXMLElement;
 
 readonly class XmlGenerator implements SourceGenerator
@@ -34,10 +34,11 @@ readonly class XmlGenerator implements SourceGenerator
         foreach ($element->attributes() as $name => $value) {
             $parameterName = $this->nameService->createVariableName($name);
 
-            $parameters[$parameterName] = new ObjectParameter(
+            $parameters[$parameterName] = new XmlObjectParameter(
                 originalName: $name,
                 formattedName: $parameterName,
                 types: [$this->determineXmlType($value)],
+                isAttribute: true,
             );
         }
 
@@ -56,7 +57,7 @@ readonly class XmlGenerator implements SourceGenerator
         }
 
         return new DecodedObject(
-            name: $this->nameService->createVariableName($element->getName()),
+            name: $this->nameService->createClassName($element->getName()),
             parameters: $parameters,
         );
     }
@@ -82,13 +83,13 @@ readonly class XmlGenerator implements SourceGenerator
         return ParameterType::STRING;
     }
 
-    private function buildObjectParameter(SimpleXMLElement $element): ObjectParameter
+    private function buildObjectParameter(SimpleXMLElement $element): XmlObjectParameter
     {
         $childName = $element->getName();
         $formattedName = $this->nameService->createVariableName($childName);
 
         if (count($element->children()) || count($element->attributes())) {
-            return new ObjectParameter(
+            return new XmlObjectParameter(
                 originalName: $childName,
                 formattedName: $formattedName,
                 types: [ParameterType::OBJECT],
@@ -97,7 +98,7 @@ readonly class XmlGenerator implements SourceGenerator
         }
 
         if (trim((string)$element) !== "") {
-            return new ObjectParameter(
+            return new XmlObjectParameter(
                 originalName: $childName,
                 formattedName: $formattedName,
                 types: [$this->determineXmlType((string)$element)],
@@ -105,7 +106,7 @@ readonly class XmlGenerator implements SourceGenerator
         }
 
 
-        return new ObjectParameter(
+        return new XmlObjectParameter(
             originalName: $childName,
             formattedName: $formattedName,
             types: [ParameterType::OBJECT],
@@ -113,7 +114,7 @@ readonly class XmlGenerator implements SourceGenerator
         );
     }
 
-    private function handleArrayType(ObjectParameter $predefined, ObjectParameter $element): ObjectParameter
+    private function handleArrayType(XmlObjectParameter $predefined, XmlObjectParameter $element): XmlObjectParameter
     {
         $types = [];
 
@@ -135,7 +136,7 @@ readonly class XmlGenerator implements SourceGenerator
             }
         }
 
-        return new ObjectParameter(
+        return new XmlObjectParameter(
             originalName: $predefined->originalName,
             formattedName: $predefined->formattedName,
             types: [ParameterType::ARRAY],
