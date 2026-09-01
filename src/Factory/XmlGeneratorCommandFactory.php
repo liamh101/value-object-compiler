@@ -4,9 +4,9 @@ namespace LiamH\ValueObjectCompiler\Factory;
 
 use LiamH\ValueObjectCompiler\Generator\XmlGenerator;
 use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
-use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
 use LiamH\ValueObjectCompiler\Service\FileService;
 use LiamH\ValueObjectCompiler\Service\NameService;
+use LiamH\ValueObjectCompiler\Service\XmlDecodedObjectService;
 
 class XmlGeneratorCommandFactory implements GeneratorFactory
 {
@@ -25,9 +25,9 @@ class XmlGeneratorCommandFactory implements GeneratorFactory
         return new FileService($outputDirectory);
     }
 
-    public function createDecodedObjectService(): JsonDecodedObjectService
+    public function createDecodedObjectService(): XmlDecodedObjectService
     {
-        return new JsonDecodedObjectService();
+        return new XmlDecodedObjectService();
     }
 
     public function createFileGenerator(string $outputDirectory): ValueObjectGenerator

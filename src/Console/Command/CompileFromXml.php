@@ -58,10 +58,7 @@ class CompileFromXml extends Command
             $contents
         );
 
-        die(var_dump($result));
-
         $output->writeln('Writing to Files');
-
         $this->valueObjectGenerator->createFiles($result);
 
         return Command::SUCCESS;
