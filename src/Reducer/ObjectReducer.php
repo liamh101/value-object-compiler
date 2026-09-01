@@ -6,6 +6,7 @@ use LiamH\ValueObjectCompiler\Enum\ParameterType;
 use LiamH\ValueObjectCompiler\Exception\ObjectReducerException;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
 
 class ObjectReducer
 {
@@ -60,12 +61,9 @@ class ObjectReducer
                     $parameter->subObject instanceof DecodedObject &&
                     $this->masterParameters[$parameterName]->subObject instanceof DecodedObject
                 ) {
-                    $this->masterParameters[$parameterName] = new ObjectParameter(
-                        originalName: $parameter->originalName,
-                        formattedName: $parameter->formattedName,
-                        types: $parameter->types,
-                        arrayTypes: $parameter->arrayTypes,
-                        subObject: (new ObjectReducer([$parameter->subObject, $this->masterParameters[$parameterName]->subObject]))->reduceObjects(),
+                    $this->masterParameters[$parameterName] = $this->cloneParameterWithSubObject(
+                        $parameter,
+                        (new ObjectReducer([$parameter->subObject, $this->masterParameters[$parameterName]->subObject]))->reduceObjects()
                     );
                     continue;
                 }
@@ -107,13 +105,7 @@ class ObjectReducer
             }
         }
 
-        $this->masterParameters[$parameter->formattedName] = new ObjectParameter(
-            originalName: $parameter->originalName,
-            formattedName: $parameter->formattedName,
-            types: $newTypes,
-            arrayTypes: $newArrayTypes,
-            subObject: $parameter->subObject,
-        );
+        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes);
     }
 
     private function addMissingMasterParameter(ObjectParameter $parameter): void
@@ -124,13 +116,7 @@ class ObjectReducer
             $newTypes[] = ParameterType::NULL;
         }
 
-        $this->masterParameters[$parameter->formattedName] = new ObjectParameter(
-            originalName: $parameter->originalName,
-            formattedName: $parameter->formattedName,
-            types: $newTypes,
-            arrayTypes: $parameter->arrayTypes,
-            subObject: $parameter->subObject,
-        );
+        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes);
     }
 
     private function setParameterAsNullable(string $parameterName): void
@@ -146,13 +132,7 @@ class ObjectReducer
             $newTypes[] = ParameterType::NULL;
         }
 
-        $this->masterParameters[$parameterName] = new ObjectParameter(
-            originalName: $duplicateObject->originalName,
-            formattedName: $duplicateObject->formattedName,
-            types: $newTypes,
-            arrayTypes: $duplicateObject->arrayTypes,
-            subObject: $duplicateObject->subObject,
-        );
+        $this->masterParameters[$parameterName] = $this->cloneParameter($duplicateObject, $newTypes);
     }
 
     private function reduceChildArrayTypes(): void
@@ -191,5 +171,52 @@ class ObjectReducer
                 throw ObjectReducerException::invalidReduceType($decodedObject);
             }
         }
+    }
+
+    /**
+     * @param ParameterType[] $newTypes
+     */
+    private function cloneParameter(ObjectParameter $parameter, array $newTypes): ObjectParameter
+    {
+        if ($parameter instanceof XmlObjectParameter) {
+            return new XmlObjectParameter(
+                originalName: $parameter->originalName,
+                formattedName: $parameter->formattedName,
+                types: $newTypes,
+                arrayTypes: $parameter->arrayTypes,
+                isAttribute: $parameter->isAttribute,
+                subObject: $parameter->subObject,
+            );
+        }
+
+        return new ObjectParameter(
+            originalName: $parameter->originalName,
+            formattedName: $parameter->formattedName,
+            types: $newTypes,
+            arrayTypes: $parameter->arrayTypes,
+            subObject: $parameter->subObject,
+        );
+    }
+
+    private function cloneParameterWithSubObject(ObjectParameter $parameter, DecodedObject $subObject): ObjectParameter
+    {
+        if ($parameter instanceof XmlObjectParameter) {
+            return new XmlObjectParameter(
+                originalName: $parameter->originalName,
+                formattedName: $parameter->formattedName,
+                types: $parameter->types,
+                arrayTypes: $parameter->arrayTypes,
+                isAttribute: $parameter->isAttribute,
+                subObject: $subObject,
+            );
+        }
+
+        return new ObjectParameter(
+            originalName: $parameter->originalName,
+            formattedName: $parameter->formattedName,
+            types: $parameter->types,
+            arrayTypes: $parameter->arrayTypes,
+            subObject: $subObject,
+        );
     }
 }
