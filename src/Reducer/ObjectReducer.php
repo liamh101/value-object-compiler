@@ -105,7 +105,7 @@ class ObjectReducer
             }
         }
 
-        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes);
+        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes, $newArrayTypes);
     }
 
     private function addMissingMasterParameter(ObjectParameter $parameter): void
@@ -116,7 +116,7 @@ class ObjectReducer
             $newTypes[] = ParameterType::NULL;
         }
 
-        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes);
+        $this->masterParameters[$parameter->formattedName] = $this->cloneParameter($parameter, $newTypes, $parameter->arrayTypes);
     }
 
     private function setParameterAsNullable(string $parameterName): void
@@ -132,7 +132,7 @@ class ObjectReducer
             $newTypes[] = ParameterType::NULL;
         }
 
-        $this->masterParameters[$parameterName] = $this->cloneParameter($duplicateObject, $newTypes);
+        $this->masterParameters[$parameterName] = $this->cloneParameter($duplicateObject, $newTypes, $duplicateObject->arrayTypes);
     }
 
     private function reduceChildArrayTypes(): void
@@ -175,15 +175,16 @@ class ObjectReducer
 
     /**
      * @param ParameterType[] $newTypes
+     * @param ParameterType[]|DecodedObject[] $newArrayTypes
      */
-    private function cloneParameter(ObjectParameter $parameter, array $newTypes): ObjectParameter
+    private function cloneParameter(ObjectParameter $parameter, array $newTypes, array $newArrayTypes): ObjectParameter
     {
         if ($parameter instanceof XmlObjectParameter) {
             return new XmlObjectParameter(
                 originalName: $parameter->originalName,
                 formattedName: $parameter->formattedName,
                 types: $newTypes,
-                arrayTypes: $parameter->arrayTypes,
+                arrayTypes: $newArrayTypes,
                 isAttribute: $parameter->isAttribute,
                 subObject: $parameter->subObject,
             );
@@ -193,7 +194,7 @@ class ObjectReducer
             originalName: $parameter->originalName,
             formattedName: $parameter->formattedName,
             types: $newTypes,
-            arrayTypes: $parameter->arrayTypes,
+            arrayTypes: $newArrayTypes,
             subObject: $parameter->subObject,
         );
     }
