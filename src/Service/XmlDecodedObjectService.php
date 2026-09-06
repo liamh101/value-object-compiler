@@ -42,7 +42,7 @@ class XmlDecodedObjectService extends DecodedObjectService
                 $objectValidation .= ' || ' . PHP_EOL;
             }
 
-            $objectValidation .= $this->getValueParsedName($requiredParameter) . '->__toString() === \'\'';
+            $objectValidation .= '(string)' . $this->getValueParsedName($requiredParameter) . ' === \'\'';
             $multipleParameters = true;
         }
 
@@ -92,7 +92,7 @@ class XmlDecodedObjectService extends DecodedObjectService
             $parameter .= 'isset($data[\'' . $objectParameter->originalName . '\']) ? ';
         }
 
-        $parameterType = $this->getPrimaryType($objectParameter);
+        $parameterType = $this->getPrimaryType($objectParameter->types);
 
         if ($parameterType !== ParameterType::STRING) {
             $parameter .= '(' . $parameterType->getDefinitionName() . ') ';
@@ -112,7 +112,7 @@ class XmlDecodedObjectService extends DecodedObjectService
         $parameter = $objectParameter->formattedName . ': ';
 
         if ($optional) {
-            $parameter .= $this->getValueParsedName($objectParameter) . '->__toString() !== \'\' ? ';
+            $parameter .= '(string)' . $this->getValueParsedName($objectParameter) . ' !== \'\' ? ';
         }
 
         if ($objectParameter->subObject && $objectParameter->hasType(ParameterType::OBJECT)) {
@@ -120,11 +120,22 @@ class XmlDecodedObjectService extends DecodedObjectService
         }
 
         if (isset($objectParameter->arrayTypes[0]) && $objectParameter->arrayTypes[0] instanceof DecodedObject && $objectParameter->hasType(ParameterType::ARRAY)) {
-            return $objectParameter->formattedName . ': ' . $objectParameter->arrayTypes[0]->name . '::hydrateMany(iterator_to_array(' . $this->getValueParsedName($objectParameter) . ')),' . PHP_EOL;
+            return $objectParameter->formattedName . ': ' . $objectParameter->arrayTypes[0]->name . '::hydrateMany(iterator_to_array(' . $this->getValueParsedName($objectParameter) . ', false)),' . PHP_EOL;
+        }
+
+        if ($objectParameter->hasType(ParameterType::ARRAY)) {
+            $parameterType = $this->getPrimaryType($objectParameter->arrayTypes);
+            $parser = match($parameterType) {
+                ParameterType::INTEGER => 'intval',
+                ParameterType::FLOAT => 'floatval',
+                default => 'strval',
+            };
+
+            return $objectParameter->formattedName . ': ' . 'array_map(\'' . $parser .'\', iterator_to_array(' . $this->getValueParsedName($objectParameter) . ', false)),' . PHP_EOL;
         }
 
         if (!$objectParameter->hasType(ParameterType::OBJECT)) {
-            $parameterType = $this->getPrimaryType($objectParameter);
+            $parameterType = $this->getPrimaryType($objectParameter->types);
 
             if ($parameterType !== ParameterType::STRING) {
                 $parameter .= '(' . $parameterType->getDefinitionName() . ') ';
@@ -149,11 +160,13 @@ class XmlDecodedObjectService extends DecodedObjectService
         return '$data->' . $parameter->originalName;
     }
 
-    private function getPrimaryType(XmlObjectParameter $parameter): ParameterType
+
+
+    private function getPrimaryType(array $types): ParameterType
     {
         $finalType = null;
 
-        foreach ($parameter->types as $type) {
+        foreach ($types as $type) {
             if (
                 $type === ParameterType::NULL
                 || $finalType === ParameterType::STRING
