@@ -151,13 +151,7 @@ class ObjectReducer
 
             $additionalTypes[] = (new ObjectReducer($decodedObjects))->reduceObjects();
 
-            $this->masterParameters[$key] = new ObjectParameter(
-                originalName: $masterParameter->originalName,
-                formattedName: $masterParameter->formattedName,
-                types: $masterParameter->types,
-                arrayTypes: $additionalTypes,
-                subObject: $masterParameter->subObject,
-            );
+            $this->masterParameters[$key] = $this->cloneParameter($masterParameter, $masterParameter->types, $additionalTypes);
         }
     }
 
