@@ -44,7 +44,7 @@ readonly class XmlGenerator implements SourceGenerator
 
         foreach ($element->children() as $child) {
             $parameterName = $this->nameService->createVariableName($child->getName());
-            $exists = isset($parameters[$parameterName]);
+            $exists = isset($parameters[$parameterName]) && !$parameters[$parameterName]->isAttribute;
             $parameter = $this->buildObjectParameter($child);
 
             if ($exists) {
