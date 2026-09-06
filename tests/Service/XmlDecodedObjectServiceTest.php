@@ -73,6 +73,9 @@ class XmlDecodedObjectServiceTest extends TestCase
 
         return [
             'Singular Standard Type' => [new DecodedObject('String', [$stringParameter]), "stringType: \$data->stringType->__toString()," . PHP_EOL],
+            'Singular Standard Type Special Name .' => [new DecodedObject('String', [new XmlObjectParameter('string.Type', 'stringType', [ParameterType::STRING])]), "stringType: \$data->{'string.Type'}->__toString()," . PHP_EOL],
+            'Singular Standard Type Special Name :' => [new DecodedObject('String', [new XmlObjectParameter('string:Type', 'stringType', [ParameterType::STRING])]), "stringType: \$data->{'string:Type'}->__toString()," . PHP_EOL],
+            'Singular Standard Type Special Name -' => [new DecodedObject('String', [new XmlObjectParameter('string-Type', 'stringType', [ParameterType::STRING])]), "stringType: \$data->{'string-Type'}->__toString()," . PHP_EOL],
             'Singular Standard Type - Attribute' => [new DecodedObject('String', [new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING], [],true)]), "stringType: \$data['stringType']," . PHP_EOL],
             'Singular Object Type' => [new DecodedObject('Object', [$objectParameter]), "objectType: Object::hydrate(\$data->objectType)," . PHP_EOL],
             'Singular Array Standard Type' => [new DecodedObject('Array', [new XmlObjectParameter('arrayType', 'arrayType', [ParameterType::ARRAY])]), "arrayType: array_map('strval', iterator_to_array(\$data->arrayType, false))," . PHP_EOL],
