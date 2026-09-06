@@ -100,7 +100,36 @@ class XmlDecodedObjectService extends DecodedObjectService
 
     public function generateDocblock(DecodedObject $decodedObject): string
     {
-        return $this->genericDocblockGenerator($decodedObject);
+        $hasDocblock = false;
+        $docblock = '/**';
+
+        foreach ($decodedObject->parameters as $parameter) {
+            if (count($parameter->arrayTypes) && $parameter->hasType(ParameterType::ARRAY)) {
+                $hasDocblock = true;
+                $docblock .= PHP_EOL . '     ' . '* @param ';
+                $isNullable = $parameter->hasArrayType(ParameterType::NULL);
+                $hasObject = isset($parameter->arrayTypes[0]) && $parameter->arrayTypes[0] instanceof DecodedObject;
+
+                if ($isNullable) {
+                    $docblock .= '?';
+                }
+
+                if ($hasObject) {
+                    $docblock .= $parameter->arrayTypes[0]->name . '[] $' . $parameter->formattedName;
+                    continue;
+                }
+
+                $type = $this->getPrimaryType($parameter->arrayTypes);
+                $docblock .= $type->getDefinitionName() . '[] $' . $parameter->formattedName;
+            }
+        }
+
+        if (!$hasDocblock) {
+            return '';
+        }
+
+        $docblock .= PHP_EOL . '     ' . '*/';
+        return $docblock;
     }
 
     public function getHydrationParameter(): HydrationParameter
