@@ -12,7 +12,44 @@ class XmlDecodedObjectService extends DecodedObjectService
 {
     public function generateParameters(DecodedObject $decodedObject): string
     {
-        return $this->genericParameterGenerator($decodedObject);
+        $parameters = '';
+
+        foreach ($decodedObject->getRequiredParameters() as $requiredParameter) {
+            $parameters .= 'public ';
+
+            if ($requiredParameter->hasType(ParameterType::ARRAY)) {
+                $parameters .= 'array $' . $requiredParameter->formattedName . ',' . PHP_EOL;
+                continue;
+            }
+
+            if ($requiredParameter->hasType(ParameterType::OBJECT)) {
+                $parameters .= $requiredParameter->subObject->name . ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
+                continue;
+            }
+
+            $type = $this->getPrimaryType($requiredParameter->types);
+
+            $parameters .= $type->getDefinitionName() . ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
+        }
+
+        foreach ($decodedObject->getOptionalParameters() as $optionalParameter) {
+            $parameters .= 'public ?';
+
+            if ($optionalParameter->hasType(ParameterType::ARRAY)) {
+                $parameters .= 'array $' . $optionalParameter->formattedName . ' = [],' . PHP_EOL;
+                continue;
+            }
+
+            if ($optionalParameter->hasType(ParameterType::OBJECT)) {
+                $parameters .= $optionalParameter->subObject->name . ' $' . $optionalParameter->formattedName . ' = null,' . PHP_EOL;
+                continue;
+            }
+
+            $type = $this->getPrimaryType($optionalParameter->types);
+            $parameters .= $type->getDefinitionName() . ' $' . $optionalParameter->formattedName . ' = null,' . PHP_EOL;
+        }
+
+        return $parameters;
     }
 
     public function generateHydrationValidation(DecodedObject $decodedObject): string
