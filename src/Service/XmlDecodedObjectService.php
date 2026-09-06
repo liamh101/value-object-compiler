@@ -24,36 +24,41 @@ class XmlDecodedObjectService extends DecodedObjectService
             return $hydrationValidation;
         }
 
+        $attributes = [];
         $multipleParameters = false;
         $hydrationValidation .= 'if (';
+        $objectValidation = '';
 
         /**
          * @var XmlObjectParameter $requiredParameter
          */
         foreach ($requiredParameters as $requiredParameter) {
-            if ($multipleParameters) {
-                $hydrationValidation .= ' || ';
+            if ($requiredParameter->isAttribute) {
+                $attributes[] = $requiredParameter->originalName;
+                continue;
             }
 
-            $hydrationValidation .= $this->generateSingleValidationRule($requiredParameter);
+            if ($multipleParameters) {
+                $objectValidation .= ' || ' . PHP_EOL;
+            }
 
+            $objectValidation .= $this->getValueParsedName($requiredParameter) . '->__toString() === \'\'';
             $multipleParameters = true;
         }
 
-        $hydrationValidation .= ') {' . PHP_EOL
+        if (count($attributes)) {
+            $hydrationValidation .= '!isset($data[\'' . implode('\'], $data[\'', $attributes) . '\'])';
+
+            if ($objectValidation !== '') {
+                $hydrationValidation .= ' || ' . PHP_EOL;
+            }
+        }
+
+        $hydrationValidation .= $objectValidation . ') {' . PHP_EOL
             . "\t\t" . 'throw new \RuntimeException(\'Missing required parameter\');' . PHP_EOL
             . '}' . PHP_EOL;
 
         return $hydrationValidation;
-    }
-
-    private function generateSingleValidationRule(XmlObjectParameter $parameter): string
-    {
-        if ($parameter->isAttribute) {
-            return '!isset($data[\'' . $parameter->originalName . '\'])';
-        }
-
-        return '$data->' . $parameter->originalName . '->__toString() === \'\'';
     }
 
     public function generateDocblock(DecodedObject $decodedObject): string
@@ -81,7 +86,7 @@ class XmlDecodedObjectService extends DecodedObjectService
 
     private function generateAttributeParameter(XmlObjectParameter $objectParameter, bool $optional): string
     {
-        $parameter = '';
+        $parameter = $objectParameter->formattedName . ': ';
 
         if ($optional) {
             $parameter .= 'isset($data[\'' . $objectParameter->originalName . '\']) ? ';
@@ -104,18 +109,18 @@ class XmlDecodedObjectService extends DecodedObjectService
 
     private function generateValueParameter(XmlObjectParameter $objectParameter, bool $optional): string
     {
-        $parameter = '';
+        $parameter = $objectParameter->formattedName . ': ';
 
         if ($optional) {
-            $parameter .= '$data->' . $objectParameter->originalName . '->__toString() !== \'\' ? ';
+            $parameter .= $this->getValueParsedName($objectParameter) . '->__toString() !== \'\' ? ';
         }
 
         if ($objectParameter->subObject && $objectParameter->hasType(ParameterType::OBJECT)) {
-            $parameter .= $objectParameter->subObject->name . '::hydrate($data->' . $objectParameter->originalName . ')';
+            $parameter .= $objectParameter->subObject->name . '::hydrate(' . $this->getValueParsedName($objectParameter) . ')';
         }
 
         if (isset($objectParameter->arrayTypes[0]) && $objectParameter->arrayTypes[0] instanceof DecodedObject && $objectParameter->hasType(ParameterType::ARRAY)) {
-            return $objectParameter->arrayTypes[0]->name . '::hydrateMany(iterator_to_array($data->' . $objectParameter->originalName . ')),' . PHP_EOL;
+            return $objectParameter->formattedName . ': ' . $objectParameter->arrayTypes[0]->name . '::hydrateMany(iterator_to_array(' . $this->getValueParsedName($objectParameter) . ')),' . PHP_EOL;
         }
 
         if (!$objectParameter->hasType(ParameterType::OBJECT)) {
@@ -125,7 +130,7 @@ class XmlDecodedObjectService extends DecodedObjectService
                 $parameter .= '(' . $parameterType->getDefinitionName() . ') ';
             }
 
-            $parameter .=  '$data->' . $objectParameter->originalName . '->__toString()';
+            $parameter .=  $this->getValueParsedName($objectParameter) . '->__toString()';
         }
 
         if ($optional) {
@@ -133,6 +138,15 @@ class XmlDecodedObjectService extends DecodedObjectService
         }
 
         return $parameter . ',' . PHP_EOL;
+    }
+
+    private function getValueParsedName(XmlObjectParameter $parameter): string
+    {
+        if (preg_match('/[.|\-|:]+/', $parameter->originalName)) {
+            return '$data->{\'' . $parameter->originalName . '\'}';
+        }
+
+        return '$data->' . $parameter->originalName;
     }
 
     private function getPrimaryType(XmlObjectParameter $parameter): ParameterType
