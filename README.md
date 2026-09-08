@@ -9,7 +9,7 @@
 
 *This is currently in Alpha*
 
-This package takes a source file, such as JSON and creates strict typed, PSR12, readonly Value Objects.
+This package takes a source file, such as JSON or XML and creates strict typed, PSR12, readonly Value Objects.
 
 The aim is to slowly support more file formats with the same file output. 
 
@@ -19,13 +19,15 @@ The aim is to slowly support more file formats with the same file output.
 
 ## How To Use
 
-### Single JSON file Compiler
+### Single file Compiler
 
 `vendor/bin/ValueObjectCompiler compile:json {jsonLocation} --outputDir={dir}`
+`vendor/bin/ValueObjectCompiler compile:xml {xmlLocation} --outputDir={dir}`
 
-Single file compiler will take a JSON file and output its value object representation. By default, it will output in the current Directory, but you can specify your own directory using the `outputDir` flag.
 
-#### Example
+Single file compiler will take a JSON or XML file and output its value object representation. By default, it will output in the current Directory, but you can specify your own directory using the `outputDir` flag.
+
+#### JSON Example
 `example.json`
 ```json 
 {
@@ -128,6 +130,124 @@ readonly class SubObject
         return new self(
             name: $data['name'],
             value: $data['value'] ?? null,
+        );
+    }
+}
+```
+
+#### XML Example
+`example.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+    <book id="bk101">
+        <author>Example Author</author>
+        <title>Sample Title</title>
+        <genre>Fiction</genre>
+        <price>19.99</price>
+        <publish_date>2023-01-01</publish_date>
+        <description>A brief description of the book.</description>
+    </book>
+    <book id="bk102">
+        <author>Example Author 2</author>
+        <title>Another Sample Title</title>
+        <genre>Fiction</genre>
+        <price>25.99</price>
+        <publish_date>2025-01-01</publish_date>
+        <description>A brief description of the book.</description>
+    </book>
+</catalog>
+```
+
+`Catalog.php`
+```php
+<?php
+
+readonly class Catalog
+{
+    /**
+     * @param Book[] $book
+     */
+    public function __construct(
+        public array $book,
+    ) {
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function hydrateMany(array $bulkData): array
+    {
+        $result = [];
+
+        foreach ($bulkData as $data) {
+            $result[] = self::hydrate($data);
+        }
+
+        return $result;
+    }
+
+    public static function hydrate(\SimpleXMLElement $data): self
+    {
+        if ((string)$data->book === '') {
+            throw new \RuntimeException('Missing required parameter');
+        }
+        return new self(book: Book::hydrateMany(iterator_to_array($data->book, false)),);
+    }
+}
+```
+`Book.php`
+```php
+<?php
+
+readonly class Book
+{
+    public function __construct(
+        public string $author,
+        public string $description,
+        public string $genre,
+        public string $id,
+        public float $price,
+        public string $publishDate,
+        public string $title,
+    ) {
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function hydrateMany(array $bulkData): array
+    {
+        $result = [];
+
+        foreach ($bulkData as $data) {
+            $result[] = self::hydrate($data);
+        }
+
+        return $result;
+    }
+
+    public static function hydrate(\SimpleXMLElement $data): self
+    {
+        if (
+            !isset($data['id']) ||
+            (string)$data->author === '' ||
+            (string)$data->description === '' ||
+            (string)$data->genre === '' ||
+            (string)$data->price === '' ||
+            (string)$data->publish_date === '' ||
+            (string)$data->title === ''
+        ) {
+            throw new \RuntimeException('Missing required parameter');
+        }
+        return new self(
+            author: $data->author->__toString(),
+            description: $data->description->__toString(),
+            genre: $data->genre->__toString(),
+            id: $data['id'],
+            price: (float) $data->price->__toString(),
+            publishDate: $data->publish_date->__toString(),
+            title: $data->title->__toString(),
         );
     }
 }
