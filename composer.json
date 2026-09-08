@@ -23,7 +23,8 @@
         "phpstan/phpstan": "^1.10",
         "doctrine/coding-standard": "^12.0",
         "phpunit/phpunit": "^10.4",
-        "php-coveralls/php-coveralls": "^2.7.0"
+        "php-coveralls/php-coveralls": "^2.7.0",
+        "ext-libxml": "*"
     },
     "bin": ["valueobjectcompiler"],
     "config": {

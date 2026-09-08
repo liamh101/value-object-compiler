@@ -247,10 +247,12 @@ class XmlGeneratorTest extends TestCase
 
     public function testGenerateClassFromSourceInvalidXml(): void
     {
+        libxml_use_internal_errors(true);
         $generator = $this->createGenerator();
 
         $this->expectException(\RuntimeException::class);
-        $result = $generator->generateClassFromSource('InvalidXml', '<?xml version="1.0" encoding="UTF-8"?><testObject><Name>Hello World<Name></testObject>');
+        $generator->generateClassFromSource('InvalidXml', '<?xml version="1.0" encoding="UTF-8"?><testObject><Name>Hello World<Name></testObject>');
+        libxml_use_internal_errors(false);
     }
 
     private function createGenerator(): XmlGenerator
