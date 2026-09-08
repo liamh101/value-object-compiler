@@ -145,6 +145,14 @@ readonly class XmlGenerator implements SourceGenerator
             }
         }
 
+        if (!count($types)) {
+            $types = $predefined->types;
+        }
+
+        if (isset($element->types[0]) && !in_array($element->types[0], $types, true)) {
+            $types[] = $element->types[0];
+        }
+
         return new XmlObjectParameter(
             originalName: $predefined->originalName,
             formattedName: $predefined->formattedName,
