@@ -191,13 +191,13 @@ class XmlDecodedObjectService extends DecodedObjectService
 
         if ($objectParameter->hasType(ParameterType::ARRAY)) {
             $parameterType = $this->getPrimaryType($objectParameter->arrayTypes);
-            $parser = match($parameterType) {
+            $parser = match ($parameterType) {
                 ParameterType::INTEGER => 'intval',
                 ParameterType::FLOAT => 'floatval',
                 default => 'strval',
             };
 
-            return $objectParameter->formattedName . ': ' . 'array_map(\'' . $parser .'\', iterator_to_array(' . $this->getValueParsedName($objectParameter) . ', false)),' . PHP_EOL;
+            return $objectParameter->formattedName . ': ' . 'array_map(\'' . $parser . '\', iterator_to_array(' . $this->getValueParsedName($objectParameter) . ', false)),' . PHP_EOL;
         }
 
         if (!$objectParameter->hasType(ParameterType::OBJECT)) {
