@@ -22,7 +22,7 @@ class XmlDecodedObjectService extends DecodedObjectService
                 continue;
             }
 
-            if ($requiredParameter->hasType(ParameterType::OBJECT)) {
+            if ($requiredParameter->subObject && $requiredParameter->hasType(ParameterType::OBJECT)) {
                 $parameters .= $requiredParameter->subObject->name . ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
                 continue;
             }
@@ -40,7 +40,7 @@ class XmlDecodedObjectService extends DecodedObjectService
                 continue;
             }
 
-            if ($optionalParameter->hasType(ParameterType::OBJECT)) {
+            if ($optionalParameter->subObject && $optionalParameter->hasType(ParameterType::OBJECT)) {
                 $parameters .= $optionalParameter->subObject->name . ' $' . $optionalParameter->formattedName . ' = null,' . PHP_EOL;
                 continue;
             }
@@ -226,8 +226,9 @@ class XmlDecodedObjectService extends DecodedObjectService
         return '$data->' . $parameter->originalName;
     }
 
-
-
+    /**
+     * @param ParameterType[]|DecodedObject[] $types
+     */
     private function getPrimaryType(array $types): ParameterType
     {
         $finalType = null;
@@ -235,6 +236,7 @@ class XmlDecodedObjectService extends DecodedObjectService
         foreach ($types as $type) {
             if (
                 $type === ParameterType::NULL
+                || $type instanceof DecodedObject
                 || $finalType === ParameterType::STRING
                 || $finalType === ParameterType::OBJECT
                 || $finalType === ParameterType::ARRAY
