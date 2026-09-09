@@ -9,7 +9,7 @@ use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
 use SimpleXMLElement;
 
-readonly class XmlGenerator implements SourceGenerator
+class XmlGenerator implements SourceGenerator
 {
     public function __construct(
         private NameService $nameService,
