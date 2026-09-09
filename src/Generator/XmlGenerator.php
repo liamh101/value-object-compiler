@@ -105,21 +105,10 @@ class XmlGenerator implements SourceGenerator
             );
         }
 
-        $subObject = $this->generateObject($element);
-
-        if (!count($subObject->parameters)) {
-            return new XmlObjectParameter(
-                originalName: $childName,
-                formattedName: $formattedName,
-                types: [ParameterType::NULL],
-            );
-        }
-
         return new XmlObjectParameter(
             originalName: $childName,
             formattedName: $formattedName,
-            types: [ParameterType::OBJECT],
-            subObject: $subObject
+            types: [ParameterType::NULL],
         );
     }
 
