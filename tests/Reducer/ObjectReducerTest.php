@@ -71,6 +71,32 @@ class ObjectReducerTest extends TestCase
         self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Object']->subObject->parameters['childParameter']->types);
     }
 
+    public function testCloneParameterWithSubObjectXml(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
+        );
+
+        $reducer = new ObjectReducer([$decodedObjectOne, $decodedObjectTwo]);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(XmlObjectParameter::class, $result->parameters['Object']);
+        self::assertSame('Object', $result->parameters['Object']->originalName);
+        self::assertSame('Object', $result->parameters['Object']->formattedName);
+        self::assertSame([ParameterType::OBJECT], $result->parameters['Object']->types);
+        self::assertSame([], $result->parameters['Object']->arrayTypes);
+        self::assertFalse($result->parameters['Object']->isAttribute);
+        self::assertSame('Child', $result->parameters['Object']->subObject->name);
+        self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->originalName);
+        self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->formattedName);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Object']->subObject->parameters['childParameter']->types);
+    }
+
     public function testSetParameterAsNullable(): void
     {
         $decodedObjectOne = new DecodedObject(
