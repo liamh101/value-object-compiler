@@ -26,7 +26,7 @@ class CompileFromJson extends Command
 
     private string $outputDir;
 
-    public function __construct(string $name = null, JsonGeneratorCommandFactory $factory)
+    public function __construct(JsonGeneratorCommandFactory $factory, ?string $name = null)
     {
         $this->factory = $factory;
         parent::__construct($name);

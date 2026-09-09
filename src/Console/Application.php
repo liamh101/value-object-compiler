@@ -16,7 +16,13 @@ class Application extends BaseApplication
     {
         parent::__construct('Value Object Compiler', self::VERSION);
 
-        $this->add(new CompileFromJson(null, new JsonGeneratorCommandFactory()));
-        $this->add(new CompileFromXml(null, new XmlGeneratorCommandFactory()));
+        if (method_exists(BaseApplication::class, 'add')) {
+            $this->add(new CompileFromJson(new JsonGeneratorCommandFactory()));
+            $this->add(new CompileFromXml(new XmlGeneratorCommandFactory()));
+            return;
+        }
+
+        $this->addCommand(new CompileFromJson(new JsonGeneratorCommandFactory()));
+        $this->addCommand(new CompileFromXml(new XmlGeneratorCommandFactory()));
     }
 }

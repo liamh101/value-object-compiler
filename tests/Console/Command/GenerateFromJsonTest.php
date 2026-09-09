@@ -32,7 +32,7 @@ class GenerateFromJsonTest extends TestCase
         $outputInterface->expects($this->exactly(2))
             ->method('writeln');
 
-        $command = new CompileFromJson(null, $factoryMock);
+        $command = new CompileFromJson($factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
@@ -57,7 +57,7 @@ class GenerateFromJsonTest extends TestCase
 
         $outputInterface = $this->createMock(OutputInterface::class);
 
-        $command = new CompileFromJson(null, $factoryMock);
+        $command = new CompileFromJson($factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
@@ -76,7 +76,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn(null);
 
-        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('./', $result);
@@ -94,7 +94,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('');
 
-        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('./', $result);
@@ -112,7 +112,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('/etc/testdir/');
 
-        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('/etc/testdir/', $result);
@@ -130,7 +130,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('/etc/testdir');
 
-        $command = new CompileFromJson(null, new JsonGeneratorCommandFactory());
+        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('/etc/testdir/', $result);

@@ -24,7 +24,7 @@ class CompileFromXml extends Command
 
     private string $outputDir;
 
-    public function __construct(string $name = null, XmlGeneratorCommandFactory $factory)
+    public function __construct(XmlGeneratorCommandFactory $factory, ?string $name = null)
     {
         $this->factory = $factory;
         parent::__construct($name);
