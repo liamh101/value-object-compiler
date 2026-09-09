@@ -218,6 +218,44 @@ class XmlGeneratorTest extends TestCase
         self::assertSame([ParameterType::FLOAT, ParameterType::NULL], $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes[0]->parameters['optionalTwo']->types);
     }
 
+    public function testGenerateObjectWithEmptyChildReturnsNull(): void
+    {
+        $reflection = new \ReflectionClass(XmlGenerator::class);
+        $method = $reflection->getMethod('generateObject');
+        $method->setAccessible(true);
+
+        $generator = $this->createGenerator();
+
+        $result = $method->invokeArgs($generator, [simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><emptyChild></emptyChild></testObject>')]);
+
+        self::assertSame('TestObject', $result->name);
+        self::assertSame('emptyChild', $result->parameters['emptyChild']->originalName);
+        self::assertSame('emptyChild', $result->parameters['emptyChild']->formattedName);
+        self::assertSame([ParameterType::NULL], $result->parameters['emptyChild']->types);
+    }
+
+    public function testGenerateObjectWithRepeatedArrayRetainsPredefinedTypes(): void
+    {
+        $reflection = new \ReflectionClass(XmlGenerator::class);
+        $method = $reflection->getMethod('generateObject');
+        $method->setAccessible(true);
+
+        $generator = $this->createGenerator();
+
+        $result = $method->invokeArgs($generator, [simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><objectType><subArray>Hello world</subArray><subArray>Foobar</subArray><subArray>1</subArray></objectType></testObject>')]);
+
+        self::assertSame('TestObject', $result->name);
+        self::assertSame('objectType', $result->parameters['objectType']->originalName);
+        self::assertSame('objectType', $result->parameters['objectType']->formattedName);
+        self::assertSame([ParameterType::OBJECT], $result->parameters['objectType']->types);
+
+        self::assertSame('ObjectType', $result->parameters['objectType']->subObject->name);
+        self::assertSame('subArray', $result->parameters['objectType']->subObject->parameters['subArray']->originalName);
+        self::assertSame('subArray', $result->parameters['objectType']->subObject->parameters['subArray']->formattedName);
+        self::assertSame([ParameterType::ARRAY], $result->parameters['objectType']->subObject->parameters['subArray']->types);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['objectType']->subObject->parameters['subArray']->arrayTypes);
+    }
+
     public static function determineXmlTypeProvider(): array
     {
         return [
