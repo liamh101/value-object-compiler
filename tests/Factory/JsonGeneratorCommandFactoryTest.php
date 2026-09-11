@@ -16,5 +16,4 @@ class JsonGeneratorCommandFactoryTest extends TestCase
         self::assertInstanceOf(ValueObjectGenerator::class, $factory->createFileGenerator('./'));
         self::assertInstanceOf(JsonGenerator::class, $factory->createSourceGenerator());
     }
-
 }

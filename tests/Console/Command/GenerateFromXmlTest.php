@@ -2,21 +2,21 @@
 
 namespace Console\Command;
 
-use LiamH\ValueObjectCompiler\Console\Command\CompileFromJson;
-use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
-use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Console\Command\CompileFromXml;
+use LiamH\ValueObjectCompiler\Factory\XmlGeneratorCommandFactory;
 use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
+use LiamH\ValueObjectCompiler\Generator\XmlGenerator;
 use LiamH\ValueObjectCompiler\Service\FileService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateFromJsonTest extends TestCase
+class GenerateFromXmlTest extends TestCase
 {
     public function testCommand(): void
     {
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('execute');
         $method->setAccessible(true);
 
@@ -26,13 +26,13 @@ class GenerateFromJsonTest extends TestCase
         $inputInterface->expects($this->once())
             ->method('getArgument')
             ->with('sourceFile')
-            ->willReturn('SourceFile.json');
+            ->willReturn('SourceFile.xml');
 
         $outputInterface = $this->createMock(OutputInterface::class);
         $outputInterface->expects($this->exactly(2))
             ->method('writeln');
 
-        $command = new CompileFromJson($factoryMock);
+        $command = new CompileFromXml($factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
@@ -43,11 +43,11 @@ class GenerateFromJsonTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('execute');
         $method->setAccessible(true);
 
-        $factoryMock = $this->createMock(JsonGeneratorCommandFactory::class);
+        $factoryMock = $this->createMock(XmlGeneratorCommandFactory::class);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())
@@ -57,7 +57,7 @@ class GenerateFromJsonTest extends TestCase
 
         $outputInterface = $this->createMock(OutputInterface::class);
 
-        $command = new CompileFromJson($factoryMock);
+        $command = new CompileFromXml($factoryMock);
 
         $result = $method->invokeArgs($command, [$inputInterface, $outputInterface]);
 
@@ -66,7 +66,7 @@ class GenerateFromJsonTest extends TestCase
 
     public function testGetCustomOutputDirectoryDefault(): void
     {
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('getOutputDirectory');
         $method->setAccessible(true);
 
@@ -76,7 +76,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn(null);
 
-        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
+        $command = new CompileFromXml(new XmlGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('./', $result);
@@ -84,7 +84,7 @@ class GenerateFromJsonTest extends TestCase
 
     public function testGetCustomOutputDirectoryEmpty(): void
     {
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('getOutputDirectory');
         $method->setAccessible(true);
 
@@ -94,7 +94,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('');
 
-        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
+        $command = new CompileFromXml(new XmlGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('./', $result);
@@ -102,7 +102,7 @@ class GenerateFromJsonTest extends TestCase
 
     public function testGetCustomOutputDirectoryProvided(): void
     {
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('getOutputDirectory');
         $method->setAccessible(true);
 
@@ -112,7 +112,7 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('/etc/testdir/');
 
-        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
+        $command = new CompileFromXml(new XmlGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('/etc/testdir/', $result);
@@ -120,7 +120,7 @@ class GenerateFromJsonTest extends TestCase
 
     public function testGetCustomOutputDirectoryProvidedMissingSlash(): void
     {
-        $reflection = new \ReflectionClass(CompileFromJson::class);
+        $reflection = new \ReflectionClass(CompileFromXml::class);
         $method = $reflection->getMethod('getOutputDirectory');
         $method->setAccessible(true);
 
@@ -130,15 +130,15 @@ class GenerateFromJsonTest extends TestCase
             ->with('outputDir')
             ->willReturn('/etc/testdir');
 
-        $command = new CompileFromJson(new JsonGeneratorCommandFactory());
+        $command = new CompileFromXml(new XmlGeneratorCommandFactory());
         $result = $method->invokeArgs($command, [$inputInterface]);
 
         self::assertSame('/etc/testdir/', $result);
     }
 
-    private function createMockFactory(): JsonGeneratorCommandFactory
+    private function createMockFactory(): XmlGeneratorCommandFactory
     {
-        $factory = $this->createMock(JsonGeneratorCommandFactory::class);
+        $factory = $this->createMock(XmlGeneratorCommandFactory::class);
         $factory->expects($this->once())->method('createSourceGenerator')->willReturn($this->createSourceGeneratorMock());
         $factory->expects($this->once())->method('createFileGenerator')->willReturn($this->createFileGeneratorMock());
         $factory->expects($this->once())->method('createFileService')->willReturn($this->createFileServiceMock());
@@ -146,12 +146,12 @@ class GenerateFromJsonTest extends TestCase
         return $factory;
     }
 
-    private function createSourceGeneratorMock(): JsonGenerator
+    private function createSourceGeneratorMock(): XmlGenerator
     {
-        $factory = $this->createMock(JsonGenerator::class);
+        $factory = $this->createMock(XmlGenerator::class);
         $factory->expects($this->once())
             ->method('generateClassFromSource')
-            ->with('SourceFile', '{"Contents": "Hello World"}')
+            ->with('SourceFile', '<source><name>Hello World!</name></source>')
             ->willReturn(new DecodedObject('SourceFile', []));
 
         return $factory;
@@ -170,14 +170,14 @@ class GenerateFromJsonTest extends TestCase
 
     public function createFileServiceMock(): FileService
     {
-        $filePath = 'SourceFile.json';
+        $filePath = 'SourceFile.xml';
 
         $factory = $this->createMock(FileService::class);
         $factory
             ->expects($this->once())
             ->method('getFileContentsFromPath')
             ->with($filePath)
-            ->willReturn('{"Contents": "Hello World"}');
+            ->willReturn('<source><name>Hello World!</name></source>');
         $factory
             ->expects($this->once())
             ->method('getFileNameFromPath')

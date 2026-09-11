@@ -9,6 +9,7 @@ use LiamH\ValueObjectCompiler\Reducer\ObjectReducer;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
 use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
+use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
 use PHPUnit\Framework\TestCase;
 
 class ObjectReducerTest extends TestCase
@@ -64,6 +65,32 @@ class ObjectReducerTest extends TestCase
         self::assertSame('Object', $result->parameters['Object']->originalName);
         self::assertSame('Object', $result->parameters['Object']->formattedName);
         self::assertSame([ParameterType::OBJECT], $result->parameters['Object']->types);
+        self::assertSame('Child', $result->parameters['Object']->subObject->name);
+        self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->originalName);
+        self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->formattedName);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Object']->subObject->parameters['childParameter']->types);
+    }
+
+    public function testCloneParameterWithSubObjectXml(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
+        );
+
+        $reducer = new ObjectReducer([$decodedObjectOne, $decodedObjectTwo]);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(XmlObjectParameter::class, $result->parameters['Object']);
+        self::assertSame('Object', $result->parameters['Object']->originalName);
+        self::assertSame('Object', $result->parameters['Object']->formattedName);
+        self::assertSame([ParameterType::OBJECT], $result->parameters['Object']->types);
+        self::assertSame([], $result->parameters['Object']->arrayTypes);
+        self::assertFalse($result->parameters['Object']->isAttribute);
         self::assertSame('Child', $result->parameters['Object']->subObject->name);
         self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->originalName);
         self::assertSame('childParameter', $result->parameters['Object']->subObject->parameters['childParameter']->formattedName);
@@ -286,6 +313,27 @@ class ObjectReducerTest extends TestCase
         self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Mixed']->types);
     }
 
+    public function testUpdateExistingXmlParameterStandard(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::STRING, ParameterType::INTEGER])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::STRING])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(XmlObjectParameter::class, $result->parameters['Mixed']);
+        self::assertSame('Mixed', $result->parameters['Mixed']->originalName);
+        self::assertSame('Mixed', $result->parameters['Mixed']->formattedName);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Mixed']->types);
+    }
+
     public function testUpdateExistingParameterArray(): void
     {
         $decodedObjectOne = new DecodedObject(
@@ -302,6 +350,28 @@ class ObjectReducerTest extends TestCase
         $result = $reducer->reduceObjects();
 
         self::assertInstanceOf(ObjectParameter::class, $result->parameters['Mixed']);
+        self::assertSame('Mixed', $result->parameters['Mixed']->originalName);
+        self::assertSame('Mixed', $result->parameters['Mixed']->formattedName);
+        self::assertSame([ParameterType::ARRAY], $result->parameters['Mixed']->types);
+        self::assertSame([ParameterType::STRING, ParameterType::INTEGER], $result->parameters['Mixed']->arrayTypes);
+    }
+
+    public function testUpdateExistingXmlParameterArray(): void
+    {
+        $decodedObjectOne = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING])]
+        );
+        $decodedObjectTwo = new DecodedObject(
+            'Hello World',
+            ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING, ParameterType::INTEGER])]
+        );
+        $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
+
+        $reducer = new ObjectReducer($decodedObjectArray);
+        $result = $reducer->reduceObjects();
+
+        self::assertInstanceOf(XmlObjectParameter::class, $result->parameters['Mixed']);
         self::assertSame('Mixed', $result->parameters['Mixed']->originalName);
         self::assertSame('Mixed', $result->parameters['Mixed']->formattedName);
         self::assertSame([ParameterType::ARRAY], $result->parameters['Mixed']->types);

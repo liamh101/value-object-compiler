@@ -16,3 +16,15 @@ services:
       args:
         PHP_VERSION: "8.3"
         PHP_XDEBUG_VERSION: "3.3.1"
+  php-8.4:
+    <<: *php
+    build:
+      args:
+        PHP_VERSION: "8.4"
+        PHP_XDEBUG_VERSION: "3.4.7"
+  php-8.5:
+    <<: *php
+    build:
+      args:
+        PHP_VERSION: "8.5"
+        PHP_XDEBUG_VERSION: "3.5.3"

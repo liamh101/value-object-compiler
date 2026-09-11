@@ -8,7 +8,7 @@ use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
 use PHPUnit\Framework\TestCase;
 
-class DecodedObjectServiceTest extends TestCase
+class JsonDecodedObjectServiceTest extends TestCase
 {
     /**
      * @dataProvider docblockProvider
