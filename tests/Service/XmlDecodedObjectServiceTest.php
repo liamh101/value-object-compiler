@@ -7,13 +7,12 @@ use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
 use LiamH\ValueObjectCompiler\Service\XmlDecodedObjectService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class XmlDecodedObjectServiceTest extends TestCase
 {
-    /**
-     * @dataProvider docblockProvider
-     */
+    #[DataProvider('docblockProvider')]
     public function testGenerateDocblock(DecodedObject $object, string $expectedDocblock): void
     {
         $service = $this->createService();
@@ -51,9 +50,7 @@ class XmlDecodedObjectServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parameterHydrationProvider
-     */
+    #[DataProvider('parameterHydrationProvider')]
     public function testGenerateParameterHydration(DecodedObject $object, string $expectedParameterHydration): void
     {
         $service = $this->createService();
@@ -94,9 +91,7 @@ class XmlDecodedObjectServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parameterValidationProvider
-     */
+    #[DataProvider('parameterValidationProvider')]
     public function testGenerateParameterValidation(DecodedObject $object, string $expectedValidation): void
     {
         $service = $this->createService();
@@ -143,9 +138,7 @@ class XmlDecodedObjectServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parameterProvider
-     */
+    #[DataProvider('parameterProvider')]
     public function testGenerateParameter(DecodedObject $object, string $expectedParameter): void
     {
         $service = $this->createService();

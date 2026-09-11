@@ -17,6 +17,9 @@ class JsonGenerator implements SourceGenerator
 
     public function generateClassFromSource(string $parentName, string $source): DecodedObject
     {
+        /**
+         * @var array<string|int, mixed>|false $formattedJson
+         */
         $formattedJson = json_decode($source, true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($formattedJson)) {
@@ -43,7 +46,7 @@ class JsonGenerator implements SourceGenerator
 
     /**
      * @param string $objectName
-     * @param array<string, mixed> $formattedJson
+     * @param array<string|int, mixed> $formattedJson
      * @return DecodedObject
      */
     private function generateObject(string $objectName, array $formattedJson): DecodedObject
@@ -52,6 +55,10 @@ class JsonGenerator implements SourceGenerator
         $parameters = [];
 
         foreach ($formattedJson as $name => $value) {
+            if (is_int($name)) {
+                continue;
+            }
+
             $parameter = ParameterType::from(gettype($value));
             $parameterName = $this->nameService->createVariableName($name);
 
@@ -71,7 +78,7 @@ class JsonGenerator implements SourceGenerator
     }
 
     /**
-     * @param array<string, mixed> $arrayValue
+     * @param array<string|int, mixed> $arrayValue
      * @param string $originalName
      * @param string $formattedName
      * @return ObjectParameter

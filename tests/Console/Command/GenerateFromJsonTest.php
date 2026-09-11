@@ -8,6 +8,7 @@ use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
 use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
 use LiamH\ValueObjectCompiler\Service\FileService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +19,6 @@ class GenerateFromJsonTest extends TestCase
     {
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('execute');
-        $method->setAccessible(true);
 
         $factoryMock = $this->createMockFactory();
 
@@ -39,13 +39,13 @@ class GenerateFromJsonTest extends TestCase
         self::assertSame(0, $result);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testCommandInvalidFile(): void
     {
         $this->expectException(\RuntimeException::class);
 
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('execute');
-        $method->setAccessible(true);
 
         $factoryMock = $this->createMock(JsonGeneratorCommandFactory::class);
 
@@ -68,7 +68,6 @@ class GenerateFromJsonTest extends TestCase
     {
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('getOutputDirectory');
-        $method->setAccessible(true);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())
@@ -86,7 +85,6 @@ class GenerateFromJsonTest extends TestCase
     {
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('getOutputDirectory');
-        $method->setAccessible(true);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())
@@ -104,7 +102,6 @@ class GenerateFromJsonTest extends TestCase
     {
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('getOutputDirectory');
-        $method->setAccessible(true);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())
@@ -122,7 +119,6 @@ class GenerateFromJsonTest extends TestCase
     {
         $reflection = new \ReflectionClass(CompileFromJson::class);
         $method = $reflection->getMethod('getOutputDirectory');
-        $method->setAccessible(true);
 
         $inputInterface = $this->createMock(InputInterface::class);
         $inputInterface->expects($this->once())

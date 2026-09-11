@@ -7,6 +7,7 @@ use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
 use LiamH\ValueObjectCompiler\Service\NameService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\ObjectParameter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class JsonGeneratorTest extends TestCase
@@ -15,7 +16,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('isSubclass');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -28,7 +28,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('isSubclass');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -41,7 +40,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('handleArrayType');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -59,7 +57,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('handleArrayType');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -77,7 +74,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('handleArrayType');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -116,7 +112,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('handleArrayType');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -155,7 +150,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('handleArrayType');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -169,14 +163,11 @@ class JsonGeneratorTest extends TestCase
         self::assertNull($result->subObject);
     }
 
-    /**
-     * @dataProvider singleLevelObjectProvider
-     */
+    #[DataProvider('singleLevelObjectProvider')]
     public function testGenerateSingleLevelObject(array $data, DecodedObject $expectedObject): void
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -233,7 +224,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -253,7 +243,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -275,7 +264,6 @@ class JsonGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(JsonGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 

@@ -16,7 +16,7 @@ class Application extends BaseApplication
     {
         parent::__construct('Value Object Compiler', self::VERSION);
 
-        if (method_exists(BaseApplication::class, 'add')) {
+        if (method_exists($this, 'add')) {
             $this->add(new CompileFromJson(new JsonGeneratorCommandFactory()));
             $this->add(new CompileFromXml(new XmlGeneratorCommandFactory()));
             return;

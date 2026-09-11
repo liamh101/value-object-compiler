@@ -7,19 +7,19 @@ use LiamH\ValueObjectCompiler\Generator\XmlGenerator;
 use LiamH\ValueObjectCompiler\Service\NameService;
 use LiamH\ValueObjectCompiler\ValueObject\DecodedObject;
 use LiamH\ValueObjectCompiler\ValueObject\XmlObjectParameter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
+
 class XmlGeneratorTest extends TestCase
 {
-    /**
-     * @dataProvider singleLevelObjectProvider
-     */
+    #[DataProvider('singleLevelObjectProvider')]
     public function testGenerateSingleLevelObject(\SimpleXMLElement $data, DecodedObject $expectedObject): void
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
+
 
         $generator = $this->createGenerator();
 
@@ -108,9 +108,7 @@ class XmlGeneratorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider determineXmlTypeProvider
-     */
+    #[DataProvider('determineXmlTypeProvider')]
     public function testDetermineXmlType(string $value, ParameterType $expectedType): void
     {
         $reflectionMethod = new ReflectionMethod(XmlGenerator::class, 'determineXmlType');
@@ -121,7 +119,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -141,7 +138,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -163,7 +159,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -185,7 +180,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -222,7 +216,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
@@ -238,7 +231,6 @@ class XmlGeneratorTest extends TestCase
     {
         $reflection = new \ReflectionClass(XmlGenerator::class);
         $method = $reflection->getMethod('generateObject');
-        $method->setAccessible(true);
 
         $generator = $this->createGenerator();
 
