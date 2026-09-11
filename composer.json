@@ -22,7 +22,7 @@
         "roave/security-advisories": "dev-latest",
         "phpstan/phpstan": "^2.2.13",
         "doctrine/coding-standard": "^14.0",
-        "phpunit/phpunit": "^10.4",
+        "phpunit/phpunit": "^13.3.3",
         "php-coveralls/php-coveralls": "^2.7.0",
         "ext-libxml": "*"
     },

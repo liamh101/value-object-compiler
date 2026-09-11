@@ -17,8 +17,8 @@ class ObjectReducerTest extends TestCase
 
     public function testBelowMinimumObjects(): void
     {
-        self::expectException(ObjectReducerException::class);
-        self::expectExceptionMessage('Not enough Objects to reduce');
+        $this->expectException(ObjectReducerException::class);
+        $this->expectExceptionMessage('Not enough Objects to reduce');
 
         $decodedObjectArray = [new DecodedObject('Hello World', [])];
 
@@ -27,8 +27,8 @@ class ObjectReducerTest extends TestCase
 
     public function testPassInvalidIntType(): void
     {
-        self::expectException(ObjectReducerException::class);
-        self::expectExceptionMessage('Object reducer requires DecodedObject. integer passed');
+        $this->expectException(ObjectReducerException::class);
+        $this->expectExceptionMessage('Object reducer requires DecodedObject. integer passed');
 
         $decodedObjectArray = [new DecodedObject('Hello World', []), 1];
 
@@ -126,9 +126,7 @@ class ObjectReducerTest extends TestCase
     {
         $reflection = new \ReflectionClass(ObjectReducer::class);
         $property = $reflection->getProperty('masterParameters');
-        $property->setAccessible(true);
         $method = $reflection->getMethod('setParameterAsNullable');
-        $method->setAccessible(true);
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
@@ -152,9 +150,7 @@ class ObjectReducerTest extends TestCase
     {
         $reflection = new \ReflectionClass(ObjectReducer::class);
         $property = $reflection->getProperty('masterParameters');
-        $property->setAccessible(true);
         $method = $reflection->getMethod('setParameterAsNullable');
-        $method->setAccessible(true);
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',

@@ -6,6 +6,7 @@ use LiamH\ValueObjectCompiler\Enum\FileExtension;
 use LiamH\ValueObjectCompiler\Exception\FileException;
 use LiamH\ValueObjectCompiler\Service\FileService;
 use LiamH\ValueObjectCompiler\ValueObject\GeneratedFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class FileServiceTest extends TestCase
@@ -24,7 +25,6 @@ class FileServiceTest extends TestCase
     {
         $reflection = new \ReflectionClass(FileService::class);
         $method = $reflection->getMethod('getValueObjectFile');
-        $method->setAccessible(true);
 
         $service = $this->createService();
         $result = $method->invoke($service);
@@ -36,7 +36,6 @@ class FileServiceTest extends TestCase
     {
         $reflection = new \ReflectionClass(FileService::class);
         $method = $reflection->getMethod('getValueObjectFile');
-        $method->setAccessible(true);
 
         $service = $this->createService();
         $method->invoke($service);
@@ -99,9 +98,7 @@ readonly class {{ClassName}}
         self::assertTrue($service->writeFile($file));
     }
 
-    /**
-     * @dataProvider pathProvider
-     */
+    #[DataProvider('pathProvider')]
     public function testGetFileNameFromPath(string $path, string $expectedResult): void
     {
         $service = $this->createService();
