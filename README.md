@@ -7,8 +7,6 @@
 [![Coverage Status][badge-coverage]][coverage]
 [![Build][badge-build]][build]
 
-*This is currently in Alpha*
-
 This package takes a source file, such as JSON or XML and creates strict typed, PSR12, readonly Value Objects.
 
 The aim is to slowly support more file formats with the same file output. 
