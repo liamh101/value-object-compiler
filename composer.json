@@ -1,6 +1,6 @@
 {
     "name": "liamhackett/valueobjectcompiler",
-    "description": "Compile strict type, read only value objects from JSON",
+    "description": "Compile strict type, read only value objects from JSON and XML",
     "type": "library",
     "autoload": {
         "psr-4": {
@@ -13,16 +13,18 @@
         }
     ],
     "require": {
-        "php": "^8.2||^8.3",
+        "php": "^8.2||^8.3||^8.4||^8.5",
         "symfony/console": "*",
-        "symfony/process": "*"
+        "symfony/process": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "phpstan/phpstan": "^1.10",
-        "doctrine/coding-standard": "^12.0",
-        "phpunit/phpunit": "^10.4",
-        "php-coveralls/php-coveralls": "^2.7.0"
+        "phpstan/phpstan": "^2.2.13",
+        "doctrine/coding-standard": "^14.0",
+        "phpunit/phpunit": "^13.3.3",
+        "php-coveralls/php-coveralls": "^2.7.0",
+        "ext-libxml": "*"
     },
     "bin": ["valueobjectcompiler"],
     "config": {

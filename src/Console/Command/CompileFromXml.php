@@ -2,31 +2,29 @@
 
 namespace LiamH\ValueObjectCompiler\Console\Command;
 
-use LiamH\ValueObjectCompiler\Factory\JsonGeneratorCommandFactory;
-use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
+use LiamH\ValueObjectCompiler\Factory\XmlGeneratorCommandFactory;
+use LiamH\ValueObjectCompiler\Generator\XmlGenerator;
 use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
-use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
 use LiamH\ValueObjectCompiler\Service\FileService;
-use LiamH\ValueObjectCompiler\Service\NameService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'compile:json', description: 'Compile Value Objects from a JSON file')]
-class CompileFromJson extends Command
+#[AsCommand(name: 'compile:xml', description: 'Compile Value Objects from an XML file')]
+class CompileFromXml extends Command
 {
     private const DEFAULT_OUTPUT_DIR = './';
-    private readonly JsonGeneratorCommandFactory $factory;
+    private readonly XmlGeneratorCommandFactory $factory;
 
-    private JsonGenerator $jsonGenerator;
+    private XmlGenerator $xmlGenerator;
     private ValueObjectGenerator $valueObjectGenerator;
     private FileService $fileService;
 
     private string $outputDir;
 
-    public function __construct(JsonGeneratorCommandFactory $factory, ?string $name = null)
+    public function __construct(XmlGeneratorCommandFactory $factory, ?string $name = null)
     {
         $this->factory = $factory;
         parent::__construct($name);
@@ -55,13 +53,12 @@ class CompileFromJson extends Command
 
         $output->writeln('Decoding Source File');
 
-        $result = $this->jsonGenerator->generateClassFromSource(
+        $result = $this->xmlGenerator->generateClassFromSource(
             $this->fileService->getFileNameFromPath($fileLocation),
             $contents
         );
 
         $output->writeln('Writing to Files');
-
         $this->valueObjectGenerator->createFiles($result);
 
         return Command::SUCCESS;
@@ -84,7 +81,7 @@ class CompileFromJson extends Command
 
     private function createServices(): void
     {
-        $this->jsonGenerator = $this->factory->createSourceGenerator();
+        $this->xmlGenerator = $this->factory->createSourceGenerator();
         $this->valueObjectGenerator = $this->factory->createFileGenerator($this->outputDir);
         $this->fileService = $this->factory->createFileService($this->outputDir);
     }

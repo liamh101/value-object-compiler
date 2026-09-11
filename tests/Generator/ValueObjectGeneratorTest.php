@@ -2,6 +2,7 @@
 
 namespace Generator;
 
+use LiamH\ValueObjectCompiler\Enum\HydrationParameter;
 use LiamH\ValueObjectCompiler\Enum\ParameterType;
 use LiamH\ValueObjectCompiler\Generator\ValueObjectGenerator;
 use LiamH\ValueObjectCompiler\Service\JsonDecodedObjectService;
@@ -21,6 +22,7 @@ class ValueObjectGeneratorTest extends TestCase
         $objectService->expects($this->once())->method('generateParameters')->with($object)->willReturn('Parameter');
         $objectService->expects($this->once())->method('generateHydrationValidation')->with($object)->willReturn('HydrationValidation');
         $objectService->expects($this->once())->method('generateHydrationLogic')->with($object)->willReturn('Hydration');
+        $objectService->expects($this->once())->method('getHydrationParameter')->willReturn(HydrationParameter::ARRAY);
 
         $fileService = $this->createMock(FileService::class);
         $fileService->expects($this->once())
@@ -53,6 +55,7 @@ class ValueObjectGeneratorTest extends TestCase
             ->willReturn('Docblock');
         $objectService->expects($this->exactly(2))->method('generateParameters')->willReturn('Parameter');
         $objectService->expects($this->exactly(2))->method('generateHydrationLogic')->willReturn('Hydration');
+        $objectService->expects($this->exactly(2))->method('getHydrationParameter')->willReturn(HydrationParameter::ARRAY);
 
         $fileService = $this->createMock(FileService::class);
         $fileService->expects($this->exactly(2))
@@ -85,6 +88,7 @@ class ValueObjectGeneratorTest extends TestCase
             ->willReturn('Docblock');
         $objectService->expects($this->exactly(2))->method('generateParameters')->willReturn('Parameter');
         $objectService->expects($this->exactly(2))->method('generateHydrationLogic')->willReturn('Hydration');
+        $objectService->expects($this->exactly(2))->method('getHydrationParameter')->willReturn(HydrationParameter::ARRAY);
 
         $fileService = $this->createMock(FileService::class);
         $fileService->expects($this->exactly(2))

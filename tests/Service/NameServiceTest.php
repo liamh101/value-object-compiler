@@ -4,18 +4,17 @@ namespace Service;
 
 use LiamH\ValueObjectCompiler\Generator\JsonGenerator;
 use LiamH\ValueObjectCompiler\Service\NameService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class NameServiceTest extends TestCase
 {
-    /**
-     * @dataProvider classNameProvider
-     */
+    #[DataProvider('classNameProvider')]
     public function testCreateName(string $passedName, string $expectedResult): void
     {
         $reflection = new \ReflectionClass(NameService::class);
         $method = $reflection->getMethod('createName');
-        $method->setAccessible(true);
+
 
         $generator = new NameService();
 
@@ -24,9 +23,7 @@ class NameServiceTest extends TestCase
         self::assertSame($expectedResult, $result);
     }
 
-    /**
-     * @dataProvider classNameProvider
-     */
+    #[DataProvider('classNameProvider')]
     public function testCreateClassName(string $passedName, string $expectedResult): void
     {
         $service = new NameService();
@@ -36,9 +33,7 @@ class NameServiceTest extends TestCase
         self::assertSame($expectedResult, $result);
     }
 
-    /**
-     * @dataProvider variableNameProvider
-     */
+    #[DataProvider('variableNameProvider')]
     public function testCreateVariableName(string $passedName, string $expectedResult): void
     {
         $service = new NameService();
@@ -47,9 +42,7 @@ class NameServiceTest extends TestCase
         self::assertSame($expectedResult, $result);
     }
 
-    /**
-     * @dataProvider singularNameProvider
-     */
+    #[DataProvider('singularNameProvider')]
     public function testMakeSingular(string $pluralString, string $expectedSingular): void
     {
         $service = new NameService();

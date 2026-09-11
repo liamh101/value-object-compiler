@@ -3,14 +3,13 @@
 namespace Enum;
 
 use LiamH\ValueObjectCompiler\Enum\ParameterType;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ParameterTypeTest extends TestCase
 {
 
-    /**
-     * @dataProvider parameterProvider
-     */
+    #[DataProvider('parameterProvider')]
     public function testDefinitionName(ParameterType $type, string $expectedDefinition): void
     {
         self::assertSame($expectedDefinition, $type->getDefinitionName());

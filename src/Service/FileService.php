@@ -26,6 +26,7 @@ class FileService
         string $parameters,
         string $hydrationValidation,
         string $hydrationLogic,
+        string $hydrationParameter,
     ): string {
         return str_replace(
             [
@@ -33,7 +34,8 @@ class FileService
                 '{{Docblock}}',
                 '{{Parameters}}',
                 '{{HydrationValidation}}',
-                '{{HydrationLogic}}'
+                '{{HydrationLogic}}',
+                '{{HydrationParameter}}',
             ],
             [
                 $className,
@@ -41,6 +43,7 @@ class FileService
                 $parameters,
                 $hydrationValidation,
                 $hydrationLogic,
+                $hydrationParameter
             ],
             $this->getValueObjectFile()
         );
@@ -60,6 +63,10 @@ class FileService
     public function getFileNameFromPath(string $path): string
     {
         preg_match('/[\w-]+\./', $path, $matches);
+
+        if (!isset($matches[0])) {
+            throw FileException::fileNotFound($path);
+        }
 
         return str_replace('.', '', $matches[0]);
     }

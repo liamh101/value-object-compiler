@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.2"
-          - "8.3"
+          - "8.4"
+          - "8.5"
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.json') }}
