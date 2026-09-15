@@ -146,6 +146,7 @@ class XmlDecodedObjectService extends DecodedObjectService
     {
         $output = '';
 
+        /** @var XmlObjectParameter $parameter */
         foreach ($decodedObject->parameters as $parameter) {
             if ($parameter->isAttribute) {
                 $output .= '$data->addAttribute(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
