@@ -159,9 +159,7 @@ class XmlDecodedObjectService extends DecodedObjectService
 
             $isObject = $parameter->hasObject();
 
-            $output .= 'array_walk($this->' . $parameter->formattedName . ', static function (';
-            $output .= $isObject ? $parameter->getObjects()[0]->name : $this->getPrimaryType($parameter->types)->getDefinitionName();
-            $output .= ' $value) use ($data) { ';
+            $output .= 'foreach($this->' . $parameter->formattedName . ' as $value) {';
 
             if ($isObject) {
                 $output .= '$item = $data->addChild(\'' . $parameter->getObjects()[0]->originalName . '\');' . PHP_EOL;
@@ -171,7 +169,7 @@ class XmlDecodedObjectService extends DecodedObjectService
             }
 
             $output .= '$data->addChild(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
-            $output .= '});' . PHP_EOL;
+            $output .= '};' . PHP_EOL;
         }
 
         return $output . PHP_EOL . 'return $data;' . PHP_EOL;
