@@ -27,6 +27,8 @@ class FileService
         string $hydrationValidation,
         string $hydrationLogic,
         string $hydrationParameter,
+        string $toSourceDefinition,
+        string $toSourceLogic,
     ): string {
         return str_replace(
             [
@@ -36,6 +38,8 @@ class FileService
                 '{{HydrationValidation}}',
                 '{{HydrationLogic}}',
                 '{{HydrationParameter}}',
+                '{{ToSourceDefinition}}',
+                '{{ToSourceLogic}}',
             ],
             [
                 $className,
@@ -43,7 +47,9 @@ class FileService
                 $parameters,
                 $hydrationValidation,
                 $hydrationLogic,
-                $hydrationParameter
+                $hydrationParameter,
+                $toSourceDefinition,
+                $toSourceLogic,
             ],
             $this->getValueObjectFile()
         );

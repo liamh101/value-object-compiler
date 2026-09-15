@@ -74,7 +74,11 @@ class JsonGenerator implements SourceGenerator
             );
         }
 
-        return new DecodedObject($this->nameService->createClassName($objectName), $parameters);
+        return new DecodedObject(
+            originalName: $objectName,
+            name: $this->nameService->createClassName($objectName),
+            parameters: $parameters,
+        );
     }
 
     /**

@@ -28,4 +28,9 @@ readonly class {{ClassName}}
         {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
+
+    public function toSource({{ToSourceDefinition}}): {{HydrationParameter}}
+    {
+        {{ToSourceLogic}}
+    }
 }

@@ -137,6 +137,46 @@ class XmlDecodedObjectService extends DecodedObjectService
         return HydrationParameter::XML;
     }
 
+    public function getToSourceDefinition(DecodedObject $decodedObject): string
+    {
+        return '\\SimpleXmlElement $data = new \\SimpleXmlElement(\'<' . $decodedObject->originalName . '></' . $decodedObject->originalName . '>\')';
+    }
+
+    public function getToSourceLogic(DecodedObject $decodedObject): string
+    {
+        $output = '';
+
+        foreach ($decodedObject->parameters as $parameter) {
+            if ($parameter->isAttribute) {
+                $output .= '$data->addAttribute(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
+                continue;
+            }
+
+            if (!$parameter->hasType(ParameterType::ARRAY) && !$parameter->hasType(ParameterType::OBJECT)) {
+                $output .= '$data->addChild(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
+                continue;
+            }
+
+            $isObject = $parameter->hasObject();
+
+            $output .= 'array_walk($this->' . $parameter->formattedName . ', static function (';
+            $output .= $isObject ? $parameter->getObjects()[0]->name : $this->getPrimaryType($parameter->types)->getDefinitionName();
+            $output .= ' $value) use ($data) { ';
+
+            if ($isObject) {
+                $output .= '$item = $data->addChild(\'' . $parameter->getObjects()[0]->originalName . '\');' . PHP_EOL;
+                $output .= '$value->toSource($item);' . PHP_EOL;
+                $output .= '});' . PHP_EOL;
+                continue;
+            }
+
+            $output .= '$data->addChild(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
+            $output .= '});' . PHP_EOL;
+        }
+
+        return $output . PHP_EOL . 'return $data;' . PHP_EOL;
+    }
+
     protected function generateParameterHydration(XmlObjectParameter|ObjectParameter $objectParameter, bool $optionalParameter): string
     {
         if (!$objectParameter instanceof XmlObjectParameter) {

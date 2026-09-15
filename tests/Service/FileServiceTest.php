@@ -76,6 +76,11 @@ readonly class {{ClassName}}
         {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
+
+    public function toSource({{ToSourceDefinition}}): {{HydrationParameter}}
+    {
+        {{ToSourceLogic}}
+    }
 }';
     }
 
@@ -167,6 +172,11 @@ readonly class ClassNameReplacement
         HydrationValidation
         return new self(HydrationReplacement);
     }
+
+    public function toSource(array $data): array
+    {
+        return [];
+    }
 }';
 
         $service = $this->createService();
@@ -178,7 +188,9 @@ readonly class ClassNameReplacement
                 'ParameterReplacement',
                 'HydrationValidation',
                 'HydrationReplacement',
-                'array'
+                'array',
+                'array $data',
+                'return [];'
             )
         );
 
