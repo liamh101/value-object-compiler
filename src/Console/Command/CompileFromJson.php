@@ -36,7 +36,8 @@ class CompileFromJson extends Command
     {
         $this
             ->addArgument(name: 'sourceFile', description: 'path to file to be scanned')
-            ->addOption(name: 'outputDir', mode: InputOption::VALUE_REQUIRED, description: 'Where compiled Value Objects are written to');
+            ->addOption(name: 'outputDir', mode: InputOption::VALUE_REQUIRED, description: 'Where compiled Value Objects are written to')
+            ->addOption(name: 'revert', shortcut: 'r', mode: InputOption::VALUE_NONE, description: 'Add function to revert object data to source.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -62,7 +63,7 @@ class CompileFromJson extends Command
 
         $output->writeln('Writing to Files');
 
-        $this->valueObjectGenerator->createFiles($result);
+        $this->valueObjectGenerator->createFiles($result, (bool)$input->getOption('revert'));
 
         return Command::SUCCESS;
     }

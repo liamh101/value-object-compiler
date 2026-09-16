@@ -30,6 +30,12 @@ class FileService
         string $toSourceDefinition,
         string $toSourceLogic,
     ): string {
+        $valueObjectFile = str_replace(
+            '{{IncludeSource}}',
+            ($toSourceDefinition || $toSourceLogic) ? $this->getSourceFunctionFile() : '',
+            $this->getValueObjectFile()
+        );
+
         return str_replace(
             [
                 '{{ClassName}}',
@@ -51,7 +57,7 @@ class FileService
                 $toSourceDefinition,
                 $toSourceLogic,
             ],
-            $this->getValueObjectFile()
+            $valueObjectFile
         );
     }
 
@@ -103,6 +109,23 @@ class FileService
         }
 
         $this->cacheFiles['valueObject'] = $contents;
+
+        return $contents;
+    }
+
+    private function getSourceFunctionFile(): string
+    {
+        if (isset($this->cacheFiles['source'])) {
+            return $this->cacheFiles['source'];
+        }
+
+        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . 'source.stub');
+
+        if (!$contents) {
+            throw FileException::fileNotFound('source.stub');
+        }
+
+        $this->cacheFiles['source'] = $contents;
 
         return $contents;
     }

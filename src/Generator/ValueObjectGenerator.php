@@ -19,7 +19,7 @@ class ValueObjectGenerator implements FileGenerator
     ) {
     }
 
-    public function createFiles(DecodedObject $baseObject): true
+    public function createFiles(DecodedObject $baseObject, bool $addSource = false): true
     {
         $generatedFiles = [];
         $this->addObject($baseObject);
@@ -28,14 +28,14 @@ class ValueObjectGenerator implements FileGenerator
             $generatedFiles[] = new GeneratedFile(
                 $object->name,
                 $this->fileService->populateValueObjectFile(
-                    $object->name,
-                    $this->decodedObjectService->generateDocblock($object),
-                    $this->decodedObjectService->generateParameters($object),
-                    $this->decodedObjectService->generateHydrationValidation($object),
-                    $this->decodedObjectService->generateHydrationLogic($object),
-                    $this->decodedObjectService->getHydrationParameter()->value,
-                    $this->decodedObjectService->getToSourceDefinition($object),
-                    $this->decodedObjectService->getToSourceLogic($object),
+                    className: $object->name,
+                    docblock: $this->decodedObjectService->generateDocblock($object),
+                    parameters: $this->decodedObjectService->generateParameters($object),
+                    hydrationValidation: $this->decodedObjectService->generateHydrationValidation($object),
+                    hydrationLogic: $this->decodedObjectService->generateHydrationLogic($object),
+                    hydrationParameter: $this->decodedObjectService->getHydrationParameter()->value,
+                    toSourceDefinition: $addSource ? $this->decodedObjectService->getToSourceDefinition($object) : '',
+                    toSourceLogic: $addSource ? $this->decodedObjectService->getToSourceLogic($object) : '',
                 ),
                 FileExtension::PHP
             );
