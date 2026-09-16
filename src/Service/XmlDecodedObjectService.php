@@ -28,7 +28,6 @@ class XmlDecodedObjectService extends DecodedObjectService
             }
 
             $type = $this->getPrimaryType($requiredParameter->types);
-
             $parameters .= $type->getDefinitionName() . ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
         }
 
@@ -145,9 +144,20 @@ class XmlDecodedObjectService extends DecodedObjectService
     public function getToSourceLogic(DecodedObject $decodedObject): string
     {
         $output = '';
+        $optional = false;
 
         /** @var XmlObjectParameter $parameter */
         foreach ($decodedObject->parameters as $parameter) {
+            if ($optional) {
+                $output .= '}' . PHP_EOL;
+            }
+
+            $optional = $parameter->hasType(ParameterType::NULL) && !$parameter->hasType(ParameterType::ARRAY);
+
+            if ($optional) {
+                $output .= 'if ($this->' . $parameter->formattedName . ') {' . PHP_EOL;
+            }
+
             if ($parameter->isAttribute) {
                 $output .= '$data->addAttribute(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
                 continue;
@@ -165,12 +175,16 @@ class XmlDecodedObjectService extends DecodedObjectService
             if ($isObject) {
                 $output .= '$item = $data->addChild(\'' . $parameter->getObjects()[0]->originalName . '\');' . PHP_EOL;
                 $output .= '$value->toSource($item);' . PHP_EOL;
-                $output .= '});' . PHP_EOL;
+                $output .= '}' . PHP_EOL;
                 continue;
             }
 
-            $output .= '$data->addChild(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
-            $output .= '};' . PHP_EOL;
+            $output .= '$data->addChild(\'' . $parameter->originalName . '\', $value);' . PHP_EOL;
+            $output .= '}' . PHP_EOL;
+        }
+
+        if ($optional) {
+            $output .= '}' . PHP_EOL;
         }
 
         return $output . PHP_EOL . 'return $data;' . PHP_EOL;
