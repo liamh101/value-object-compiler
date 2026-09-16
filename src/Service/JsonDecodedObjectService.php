@@ -60,7 +60,7 @@ class JsonDecodedObjectService extends DecodedObjectService
 
     public function getToSourceLogic(DecodedObject $decodedObject): string
     {
-        return '';
+        return 'return (array)$this;' . PHP_EOL;
     }
 
     protected function generateParameterHydration(ObjectParameter $objectParameter, bool $optionalParameter): string
