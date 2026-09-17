@@ -76,7 +76,41 @@ readonly class {{ClassName}}
         {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
+
+    {{IncludeSource}}
 }';
+    }
+
+    public function testGetSourceFile(): void
+    {
+        $reflection = new \ReflectionClass(FileService::class);
+        $method = $reflection->getMethod('getSourceFunctionFile');
+
+        $service = $this->createService();
+        $result = $method->invoke($service);
+
+        self::assertSame($this->getToSourceContents(), $result);
+    }
+
+    public function testGetCachedSourceFileFile(): void
+    {
+        $reflection = new \ReflectionClass(FileService::class);
+        $method = $reflection->getMethod('getSourceFunctionFile');
+
+        $service = $this->createService();
+        $method->invoke($service);
+        $result = $method->invoke($service);
+
+        self::assertSame($this->getToSourceContents(), $result);
+    }
+
+    private function getToSourceContents(): string
+    {
+        return '
+    public function toSource({{ToSourceDefinition}}): {{HydrationParameter}}
+    {
+        {{ToSourceLogic}}
+    }';
     }
 
     public function testWriteContents(): void
@@ -167,6 +201,12 @@ readonly class ClassNameReplacement
         HydrationValidation
         return new self(HydrationReplacement);
     }
+
+    
+    public function toSource(array $data): array
+    {
+        return [];
+    }
 }';
 
         $service = $this->createService();
@@ -178,7 +218,9 @@ readonly class ClassNameReplacement
                 'ParameterReplacement',
                 'HydrationValidation',
                 'HydrationReplacement',
-                'array'
+                'array',
+                'array $data',
+                'return [];'
             )
         );
 

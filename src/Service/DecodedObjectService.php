@@ -16,9 +16,10 @@ abstract class DecodedObjectService
     abstract public function generateHydrationValidation(DecodedObject $decodedObject): string;
     abstract public function generateDocblock(DecodedObject $decodedObject): string;
     abstract public function getHydrationParameter(): HydrationParameter;
+    abstract public function getToSourceDefinition(DecodedObject $decodedObject): string;
+    abstract public function getToSourceLogic(DecodedObject $decodedObject): string;
 
     abstract protected function generateParameterHydration(ObjectParameter|XmlObjectParameter $objectParameter, bool $optionalParameter): string;
-
 
     public function generateHydrationLogic(DecodedObject $decodedObject): string
     {
