@@ -148,6 +148,26 @@ class JsonDecodedObjectServiceTest extends TestCase
         ];
     }
 
+    public function testGetToSourceDefinition(): void
+    {
+        $decodedObject = new DecodedObject('Object', 'Object', []);
+
+        self::assertSame(
+            '',
+            $this->createService()->getToSourceDefinition($decodedObject)
+        );
+    }
+
+    public function testGetToSourceLogic(): void
+    {
+        $decodedObject = new DecodedObject('Object', 'Object', []);
+
+        self::assertSame(
+            'return (array)$this;' . PHP_EOL,
+            $this->createService()->getToSourceLogic($decodedObject)
+        );
+    }
+
     private function createService(): JsonDecodedObjectService
     {
         return new JsonDecodedObjectService();
