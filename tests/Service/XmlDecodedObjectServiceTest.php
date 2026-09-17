@@ -178,6 +178,56 @@ class XmlDecodedObjectServiceTest extends TestCase
         ];
     }
 
+    public function testGetToSourceDefinition(): void
+    {
+        $decodedObject = new DecodedObject('originalElement', 'Test', []);
+        $result = $this->createService()->getToSourceDefinition($decodedObject);
+
+        self::assertSame('\\SimpleXmlElement $data = new \\SimpleXmlElement(\'<originalElement></originalElement>\')', $result);
+    }
+
+    #[DataProvider('sourceProvider')]
+    public function testGetToSourceLogic(DecodedObject $object, string $expected): void
+    {
+        $result = $this->createService()->getToSourceLogic($object);
+
+        self::assertSame($expected, $result);
+    }
+
+    public static function sourceProvider(): array
+    {
+        $defaultReturn = PHP_EOL . 'return $data;' . PHP_EOL;
+
+        $attribute = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING], [], true);
+        $scalarParameter = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING]);
+        $objectParameter = new XmlObjectParameter('objectType', 'objectType', [ParameterType::OBJECT], [], false, new DecodedObject('Object', 'Object', [$scalarParameter]));
+        $scalarArray = new XmlObjectParameter('stringType', 'stringType', [ParameterType::ARRAY], [ParameterType::STRING]);
+        $objectArray = new XmlObjectParameter('objectType', 'objectType', [ParameterType::ARRAY], [new DecodedObject('Object', 'Object', [$scalarParameter])]);
+
+        return [
+            'attribute' => [
+                new DecodedObject('test', 'test', [$attribute]),
+                '$data->addAttribute(\'stringType\', $this->stringType);' . PHP_EOL . $defaultReturn,
+            ],
+            'scalar parameter' => [
+                new DecodedObject('test', 'test', [$scalarParameter]),
+                '$data->addChild(\'stringType\', $this->stringType);' . PHP_EOL . $defaultReturn,
+            ],
+            'object parameter' => [
+                new DecodedObject('test', 'test', [$objectParameter]),
+                '$item = $data->addChild(\'objectType\');' . PHP_EOL . '$this->objectType->toSource($item);' . PHP_EOL . $defaultReturn,
+            ],
+            'scalar array' => [
+                new DecodedObject('test', 'test', [$scalarArray]),
+                'foreach($this->stringType as $value) {$data->addChild(\'stringType\', $value);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+            'object array' => [
+                new DecodedObject('test', 'test', [$objectArray]),
+                'foreach($this->objectType as $value) {$item = $data->addChild(\'objectType\');' . PHP_EOL . '$value->toSource($item);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+        ];
+    }
+
     private function createService(): XmlDecodedObjectService
     {
         return new XmlDecodedObjectService();

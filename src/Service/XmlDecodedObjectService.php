@@ -170,10 +170,16 @@ class XmlDecodedObjectService extends DecodedObjectService
 
             $isObject = $parameter->hasObject();
 
+            if ($isObject && !$parameter->hasType(ParameterType::ARRAY)) {
+                $output .= '$item = $data->addChild(\'' . $parameter->originalName . '\');' . PHP_EOL;
+                $output .= '$this->' . $parameter->formattedName . '->toSource($item);' . PHP_EOL;
+                continue;
+            }
+
             $output .= 'foreach($this->' . $parameter->formattedName . ' as $value) {';
 
             if ($isObject) {
-                $output .= '$item = $data->addChild(\'' . $parameter->getObjects()[0]->originalName . '\');' . PHP_EOL;
+                $output .= '$item = $data->addChild(\'' . $parameter->originalName . '\');' . PHP_EOL;
                 $output .= '$value->toSource($item);' . PHP_EOL;
                 $output .= '}' . PHP_EOL;
                 continue;
