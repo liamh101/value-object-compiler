@@ -28,7 +28,6 @@ class XmlDecodedObjectService extends DecodedObjectService
             }
 
             $type = $this->getPrimaryType($requiredParameter->types);
-
             $parameters .= $type->getDefinitionName() . ' $' . $requiredParameter->formattedName . ',' . PHP_EOL;
         }
 
@@ -135,6 +134,66 @@ class XmlDecodedObjectService extends DecodedObjectService
     public function getHydrationParameter(): HydrationParameter
     {
         return HydrationParameter::XML;
+    }
+
+    public function getToSourceDefinition(DecodedObject $decodedObject): string
+    {
+        return '\\SimpleXmlElement $data = new \\SimpleXmlElement(\'<' . $decodedObject->originalName . '></' . $decodedObject->originalName . '>\')';
+    }
+
+    public function getToSourceLogic(DecodedObject $decodedObject): string
+    {
+        $output = '';
+        $optional = false;
+
+        /** @var XmlObjectParameter $parameter */
+        foreach ($decodedObject->parameters as $parameter) {
+            if ($optional) {
+                $output .= '}' . PHP_EOL;
+            }
+
+            $optional = $parameter->hasType(ParameterType::NULL) && !$parameter->hasType(ParameterType::ARRAY);
+
+            if ($optional) {
+                $output .= 'if ($this->' . $parameter->formattedName . ') {' . PHP_EOL;
+            }
+
+            if ($parameter->isAttribute) {
+                $output .= '$data->addAttribute(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
+                continue;
+            }
+
+            if (!$parameter->hasType(ParameterType::ARRAY) && !$parameter->hasType(ParameterType::OBJECT)) {
+                $output .= '$data->addChild(\'' . $parameter->originalName . '\', $this->' . $parameter->formattedName . ');' . PHP_EOL;
+                continue;
+            }
+
+            $isObject = $parameter->hasObject();
+
+            if ($isObject && !$parameter->hasType(ParameterType::ARRAY)) {
+                $output .= '$item = $data->addChild(\'' . $parameter->originalName . '\');' . PHP_EOL;
+                $output .= '$this->' . $parameter->formattedName . '->toSource($item);' . PHP_EOL;
+                continue;
+            }
+
+            $output .= 'foreach($this->' . $parameter->formattedName . ' as $value) {';
+
+            if ($isObject) {
+                $output .= '$item = $data->addChild(\'' . $parameter->originalName . '\');' . PHP_EOL;
+                $output .= '$value->toSource($item);' . PHP_EOL;
+                $output .= '}' . PHP_EOL;
+                continue;
+            }
+
+            $output .= '$data->addChild(\'' . $parameter->originalName . '\', $value);' . PHP_EOL;
+            $output .= '}' . PHP_EOL;
+        }
+
+        if ($optional) {
+            $output .= '}' . PHP_EOL;
+        }
+
+        return $output . PHP_EOL . 'return $data;' . PHP_EOL;
     }
 
     protected function generateParameterHydration(XmlObjectParameter|ObjectParameter $objectParameter, bool $optionalParameter): string

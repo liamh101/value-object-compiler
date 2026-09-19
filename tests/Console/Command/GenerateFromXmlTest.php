@@ -148,7 +148,7 @@ class GenerateFromXmlTest extends TestCase
         $factory->expects($this->once())
             ->method('generateClassFromSource')
             ->with('SourceFile', '<source><name>Hello World!</name></source>')
-            ->willReturn(new DecodedObject('SourceFile', []));
+            ->willReturn(new DecodedObject('SourceFile', 'SourceFile', []));
 
         return $factory;
     }

@@ -28,4 +28,6 @@ readonly class {{ClassName}}
         {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
+
+    {{IncludeSource}}
 }

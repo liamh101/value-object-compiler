@@ -16,7 +16,7 @@ class FileServiceTest extends TestCase
     public function testInvalidOutputDir(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Invalid output directory provided');
+        $this->expectExceptionMessageIsOrContains('Invalid output directory provided');
 
         new FileService('Invalid');
     }
@@ -24,10 +24,10 @@ class FileServiceTest extends TestCase
     public function testGetValueObjectFile(): void
     {
         $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getValueObjectFile');
+        $method = $reflection->getMethod('getFile');
 
         $service = $this->createService();
-        $result = $method->invoke($service);
+        $result = $method->invoke($service, 'valueObject.stub');
 
         self::assertSame($this->getSubContents(), $result);
     }
@@ -35,13 +35,25 @@ class FileServiceTest extends TestCase
     public function testGetCachedValueObjectFile(): void
     {
         $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getValueObjectFile');
+        $method = $reflection->getMethod('getFile');
 
         $service = $this->createService();
-        $method->invoke($service);
-        $result = $method->invoke($service);
+        $method->invoke($service, 'valueObject.stub');
+        $result = $method->invoke($service, 'valueObject.stub');
 
         self::assertSame($this->getSubContents(), $result);
+    }
+
+    public function testGetUnknownFile(): void
+    {
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessageIsOrContains('File unkownFile could not be found.');
+
+        $reflection = new \ReflectionClass(FileService::class);
+        $method = $reflection->getMethod('getFile');
+
+        $service = $this->createService();
+        @$method->invoke($service, 'unkownFile');
     }
 
     private function getSubContents(): string
@@ -76,7 +88,18 @@ readonly class {{ClassName}}
         {{HydrationValidation}}
         return new self({{HydrationLogic}});
     }
+
+    {{IncludeSource}}
 }';
+    }
+
+    private function getToSourceContents(): string
+    {
+        return '
+    public function toSource({{ToSourceDefinition}}): {{HydrationParameter}}
+    {
+        {{ToSourceLogic}}
+    }';
     }
 
     public function testWriteContents(): void
@@ -91,7 +114,7 @@ readonly class {{ClassName}}
     public function testWriteInvalidContents(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Cannot create file TestFile');
+        $this->expectExceptionMessageIsOrContains('Cannot create file TestFile');
         $file = new GeneratedFile('TestFile', 'Hello world!', FileExtension::PHP);
 
         $service = new FileService('./nonexistantFolder/');
@@ -128,7 +151,7 @@ readonly class {{ClassName}}
     public function testGetFileContentsInvalid(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('File ./tests/TestFiles/missingTestFile.txt could not be found.');
+        $this->expectExceptionMessageIsOrContains('File ./tests/TestFiles/missingTestFile.txt could not be found.');
         $service = $this->createService();
 
         $service->getFileContentsFromPath('./tests/TestFiles/missingTestFile.txt');
@@ -167,6 +190,12 @@ readonly class ClassNameReplacement
         HydrationValidation
         return new self(HydrationReplacement);
     }
+
+    
+    public function toSource(array $data): array
+    {
+        return [];
+    }
 }';
 
         $service = $this->createService();
@@ -178,7 +207,9 @@ readonly class ClassNameReplacement
                 'ParameterReplacement',
                 'HydrationValidation',
                 'HydrationReplacement',
-                'array'
+                'array',
+                'array $data',
+                'return [];'
             )
         );
 

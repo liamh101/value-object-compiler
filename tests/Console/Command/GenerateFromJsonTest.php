@@ -148,7 +148,7 @@ class GenerateFromJsonTest extends TestCase
         $factory->expects($this->once())
             ->method('generateClassFromSource')
             ->with('SourceFile', '{"Contents": "Hello World"}')
-            ->willReturn(new DecodedObject('SourceFile', []));
+            ->willReturn(new DecodedObject('SourceFile', 'SourceFile', []));
 
         return $factory;
     }

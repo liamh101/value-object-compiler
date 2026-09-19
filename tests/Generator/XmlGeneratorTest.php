@@ -39,12 +39,14 @@ class XmlGeneratorTest extends TestCase
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><typeTest>Hello!</typeTest></testObject>'),
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::STRING])]
                 )
             ],
             'string - attribute' => [
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject typeTest="Hello!"></testObject>'),
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::STRING], [], true)]
                 )
@@ -53,12 +55,14 @@ class XmlGeneratorTest extends TestCase
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><typeTest>1</typeTest></testObject>'),
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::INTEGER])]
                 )
             ],
             'integer - attribute' => [
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject typeTest="1"></testObject>'),
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::INTEGER], [], true)]
                 )
@@ -67,12 +71,14 @@ class XmlGeneratorTest extends TestCase
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><typeTest>5.12</typeTest></testObject>'),
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::FLOAT])]
                 )
             ],
             'float- attribute' => [
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject typeTest="5.12"></testObject>'),
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::FLOAT], [], true)]
                 )
@@ -81,12 +87,14 @@ class XmlGeneratorTest extends TestCase
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><typeTest>true</typeTest></testObject>'),
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN])]
                 )
             ],
             'boolean false' => [
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject><typeTest>false</typeTest></testObject>'),
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN])]
                 )
@@ -95,12 +103,14 @@ class XmlGeneratorTest extends TestCase
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject typeTest="true"></testObject>'),
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN], [], true)]
                 )
             ],
             'boolean false - attribute' => [
                 simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><testObject typeTest="false"></testObject>'),
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new XmlObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN], [], true)]
                 )

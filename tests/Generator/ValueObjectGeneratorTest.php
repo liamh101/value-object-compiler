@@ -15,7 +15,7 @@ class ValueObjectGeneratorTest extends TestCase
 {
     public function testGenerateSingleLevelObject(): void
     {
-        $object = new DecodedObject('HelloWorld', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
+        $object = new DecodedObject('HelloWorld', 'HelloWorld', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
 
         $objectService = $this->createMock(JsonDecodedObjectService::class);
         $objectService->expects($this->once())->method('generateDocblock')->with($object)->willReturn('Docblock');
@@ -41,8 +41,9 @@ class ValueObjectGeneratorTest extends TestCase
 
     public function testGenerateMultiLevelObjectWithArray(): void
     {
-        $subObject = new DecodedObject('SubObject', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
+        $subObject = new DecodedObject('SubObject', 'SubObject', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
         $object = new DecodedObject(
+            'HelloWorld',
             'HelloWorld',
             [
                 new ObjectParameter('string', 'string', [ParameterType::STRING]),
@@ -73,8 +74,9 @@ class ValueObjectGeneratorTest extends TestCase
 
     public function testGenerateMultiLevelObjectWithParameter(): void
     {
-        $subObject = new DecodedObject('SubObject', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
+        $subObject = new DecodedObject('SubObject', 'SubObject', [new ObjectParameter('string', 'string', [ParameterType::STRING])]);
         $object = new DecodedObject(
+            'HelloWorld',
             'HelloWorld',
             [
                 new ObjectParameter('string', 'string', [ParameterType::STRING]),

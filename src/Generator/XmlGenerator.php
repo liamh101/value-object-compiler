@@ -57,6 +57,7 @@ class XmlGenerator implements SourceGenerator
         }
 
         return new DecodedObject(
+            originalName: $element->getName(),
             name: $this->nameService->createClassName($element->getName()),
             parameters: $parameters,
         );
