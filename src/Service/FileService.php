@@ -10,6 +10,8 @@ use Symfony\Component\Process\Process;
 class FileService
 {
     private const STUB_LOCATION = '/../Stub/';
+    private const SOURCE_FILE_NAME = 'source.stub';
+    private const VALUE_OBJECT_FILE_NAME = 'valueObject.stub';
 
     /** @var string[] */
     private array $cacheFiles = [];
@@ -32,8 +34,8 @@ class FileService
     ): string {
         $valueObjectFile = str_replace(
             '{{IncludeSource}}',
-            ($toSourceDefinition || $toSourceLogic) ? $this->getSourceFunctionFile() : '',
-            $this->getValueObjectFile()
+            ($toSourceDefinition || $toSourceLogic) ? $this->getFile(self::SOURCE_FILE_NAME) : '',
+            $this->getFile(self::VALUE_OBJECT_FILE_NAME)
         );
 
         return str_replace(
@@ -96,36 +98,19 @@ class FileService
         return true;
     }
 
-    private function getValueObjectFile(): string
+    private function getFile(string $name): string
     {
-        if (isset($this->cacheFiles['valueObject'])) {
-            return $this->cacheFiles['valueObject'];
+        if (isset($this->cacheFiles[$name])) {
+            return $this->cacheFiles[$name];
         }
 
-        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . 'valueObject.stub');
+        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . $name);
 
         if (!$contents) {
-            throw FileException::fileNotFound('valueObject.stub');
+            throw FileException::fileNotFound($name);
         }
 
-        $this->cacheFiles['valueObject'] = $contents;
-
-        return $contents;
-    }
-
-    private function getSourceFunctionFile(): string
-    {
-        if (isset($this->cacheFiles['source'])) {
-            return $this->cacheFiles['source'];
-        }
-
-        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . 'source.stub');
-
-        if (!$contents) {
-            throw FileException::fileNotFound('source.stub');
-        }
-
-        $this->cacheFiles['source'] = $contents;
+        $this->cacheFiles[$name] = $contents;
 
         return $contents;
     }

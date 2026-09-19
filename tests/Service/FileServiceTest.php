@@ -24,10 +24,10 @@ class FileServiceTest extends TestCase
     public function testGetValueObjectFile(): void
     {
         $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getValueObjectFile');
+        $method = $reflection->getMethod('getFile');
 
         $service = $this->createService();
-        $result = $method->invoke($service);
+        $result = $method->invoke($service, 'valueObject.stub');
 
         self::assertSame($this->getSubContents(), $result);
     }
@@ -35,13 +35,25 @@ class FileServiceTest extends TestCase
     public function testGetCachedValueObjectFile(): void
     {
         $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getValueObjectFile');
+        $method = $reflection->getMethod('getFile');
 
         $service = $this->createService();
-        $method->invoke($service);
-        $result = $method->invoke($service);
+        $method->invoke($service, 'valueObject.stub');
+        $result = $method->invoke($service, 'valueObject.stub');
 
         self::assertSame($this->getSubContents(), $result);
+    }
+
+    public function testGetUnknownFile(): void
+    {
+        $this->expectException(FileException::class);
+        $this->expectExceptionMessageIsOrContains('File unkownFile could not be found.');
+
+        $reflection = new \ReflectionClass(FileService::class);
+        $method = $reflection->getMethod('getFile');
+
+        $service = $this->createService();
+        @$method->invoke($service, 'unkownFile');
     }
 
     private function getSubContents(): string
@@ -79,29 +91,6 @@ readonly class {{ClassName}}
 
     {{IncludeSource}}
 }';
-    }
-
-    public function testGetSourceFile(): void
-    {
-        $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getSourceFunctionFile');
-
-        $service = $this->createService();
-        $result = $method->invoke($service);
-
-        self::assertSame($this->getToSourceContents(), $result);
-    }
-
-    public function testGetCachedSourceFileFile(): void
-    {
-        $reflection = new \ReflectionClass(FileService::class);
-        $method = $reflection->getMethod('getSourceFunctionFile');
-
-        $service = $this->createService();
-        $method->invoke($service);
-        $result = $method->invoke($service);
-
-        self::assertSame($this->getToSourceContents(), $result);
     }
 
     private function getToSourceContents(): string
