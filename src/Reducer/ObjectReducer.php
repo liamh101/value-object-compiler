@@ -83,8 +83,9 @@ class ObjectReducer
         $this->reduceChildArrayTypes();
 
         return new DecodedObject(
-            $this->masterObject->name,
-            $this->masterParameters,
+            originalName: $this->masterObject->originalName,
+            name: $this->masterObject->name,
+            parameters: $this->masterParameters,
         );
     }
 

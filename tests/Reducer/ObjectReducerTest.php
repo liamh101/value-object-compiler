@@ -18,9 +18,9 @@ class ObjectReducerTest extends TestCase
     public function testBelowMinimumObjects(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Not enough Objects to reduce');
+        $this->expectExceptionMessageIsOrContains('Not enough Objects to reduce');
 
-        $decodedObjectArray = [new DecodedObject('Hello World', [])];
+        $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', [])];
 
         new ObjectReducer($decodedObjectArray);
     }
@@ -28,9 +28,9 @@ class ObjectReducerTest extends TestCase
     public function testPassInvalidIntType(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Object reducer requires DecodedObject. integer passed');
+        $this->expectExceptionMessageIsOrContains('Object reducer requires DecodedObject. integer passed');
 
-        $decodedObjectArray = [new DecodedObject('Hello World', []), 1];
+        $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', []), 1];
 
         new ObjectReducer($decodedObjectArray);
     }
@@ -38,9 +38,9 @@ class ObjectReducerTest extends TestCase
     public function testPassInvalidObjectType(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Object reducer requires DecodedObject. LiamH\ValueObjectCompiler\ValueObject\GeneratedFile passed');
+        $this->expectExceptionMessageIsOrContains('Object reducer requires DecodedObject. LiamH\ValueObjectCompiler\ValueObject\GeneratedFile passed');
 
-        $decodedObjectArray = [new DecodedObject('Hello World', []), new GeneratedFile('Test', 'hello', FileExtension::PHP)];
+        $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', []), new GeneratedFile('Test', 'hello', FileExtension::PHP)];
 
         new ObjectReducer($decodedObjectArray);
     }
@@ -49,11 +49,13 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
-            ['Object' => new ObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
+            'Hello World',
+            ['Object' => new ObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], new DecodedObject('Child', 'Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
         );
         $decodedObjectTwo = new DecodedObject(
             'Hello World',
-            ['Object' => new ObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
+            'Hello World',
+            ['Object' => new ObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], new DecodedObject('Child', 'Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
         );
 
         $decodedObjectArray = [$decodedObjectOne, $decodedObjectTwo];
@@ -75,11 +77,13 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
-            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', 'Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::STRING])]))]
         );
         $decodedObjectTwo = new DecodedObject(
             'Hello World',
-            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
+            'Hello World',
+            ['Object' => new XmlObjectParameter('Object', 'Object', [ParameterType::OBJECT], [], subObject: new DecodedObject('Child', 'Child', ['childParameter' => new ObjectParameter('childParameter', 'childParameter', [ParameterType::INTEGER])]))]
         );
 
         $reducer = new ObjectReducer([$decodedObjectOne, $decodedObjectTwo]);
@@ -101,9 +105,11 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING]), 'Int' => new ObjectParameter('Int', 'Int', [ParameterType::INTEGER])]
         );
@@ -130,9 +136,11 @@ class ObjectReducerTest extends TestCase
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
         );
@@ -154,9 +162,11 @@ class ObjectReducerTest extends TestCase
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
         );
@@ -174,9 +184,11 @@ class ObjectReducerTest extends TestCase
     {
         $childArrayOne = new DecodedObject(
             'ChildArray',
+            'ChildArray',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
         $childArrayTwo = new DecodedObject(
+            'ChildArray',
             'ChildArray',
             [
                 'String' => new ObjectParameter('String', 'String', [ParameterType::STRING]),
@@ -186,9 +198,11 @@ class ObjectReducerTest extends TestCase
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, $childArrayTwo])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
         );
@@ -216,9 +230,11 @@ class ObjectReducerTest extends TestCase
     {
         $childArrayOne = new DecodedObject(
             'ChildArray',
+            'ChildArray',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
         $childArrayTwo = new DecodedObject(
+            'ChildArray',
             'ChildArray',
             [
                 'String' => new ObjectParameter('String', 'String', [ParameterType::STRING]),
@@ -228,9 +244,11 @@ class ObjectReducerTest extends TestCase
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, $childArrayTwo, ParameterType::INTEGER])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
         );
@@ -260,14 +278,17 @@ class ObjectReducerTest extends TestCase
     {
         $childArrayOne = new DecodedObject(
             'ChildArray',
+            'ChildArray',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING])]
         );
 
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['ObjectArray' => new ObjectParameter('ObjectArray', 'ObjectArray', [ParameterType::ARRAY], [$childArrayOne, ParameterType::INTEGER])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['String' => new ObjectParameter('String', 'String', [ParameterType::STRING, ParameterType::NULL])]
         );
@@ -292,9 +313,11 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::STRING, ParameterType::INTEGER])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::STRING])]
         );
@@ -313,9 +336,11 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::STRING, ParameterType::INTEGER])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::STRING])]
         );
@@ -334,9 +359,11 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['Mixed' => new ObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING, ParameterType::INTEGER])]
         );
@@ -356,9 +383,11 @@ class ObjectReducerTest extends TestCase
     {
         $decodedObjectOne = new DecodedObject(
             'Hello World',
+            'Hello World',
             ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING])]
         );
         $decodedObjectTwo = new DecodedObject(
+            'Hello World',
             'Hello World',
             ['Mixed' => new XmlObjectParameter('Mixed', 'Mixed', [ParameterType::ARRAY], [ParameterType::STRING, ParameterType::INTEGER])]
         );

@@ -89,7 +89,7 @@ class JsonGeneratorTest extends TestCase
         $expectedSubParameterName = new ObjectParameter('name', 'name', [ParameterType::STRING], [], null);
         $expectedSubParameterType = new ObjectParameter('type', 'type', [ParameterType::STRING], [], null);
 
-        $expectedObject = new DecodedObject('ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
+        $expectedObject = new DecodedObject('ObjectTes', 'ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
 
         self::assertInstanceOf(DecodedObject::class, $result->arrayTypes[0]);
         self::assertSame('ObjectTest', $result->arrayTypes[0]->name);
@@ -127,7 +127,7 @@ class JsonGeneratorTest extends TestCase
         $expectedSubParameterName = new ObjectParameter('name', 'name', [ParameterType::STRING], [], null);
         $expectedSubParameterType = new ObjectParameter('type', 'type', [ParameterType::STRING], [], null);
 
-        $expectedObject = new DecodedObject('ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
+        $expectedObject = new DecodedObject('ObjectTes', 'ObjectTes', [$expectedSubParameterName, $expectedSubParameterType]);
 
         self::assertInstanceOf(DecodedObject::class, $result->arrayTypes[0]);
         self::assertSame('ObjectTest', $result->arrayTypes[0]->name);
@@ -186,12 +186,14 @@ class JsonGeneratorTest extends TestCase
                 ['typeTest' => 'Hello World'],
                 new DecodedObject(
                     'TestObject',
-                    ['typeTest' => new ObjectParameter('typeTest', 'typeTest', [ParameterType::STRING])]
+                    'TestObject',
+                    ['typeTest' => new ObjectParameter('typeTest','typeTest', [ParameterType::STRING])]
                 )
             ],
             'integer' => [
                 ['typeTest' => 1],
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new ObjectParameter('typeTest', 'typeTest', [ParameterType::INTEGER])]
                 )
@@ -200,6 +202,7 @@ class JsonGeneratorTest extends TestCase
                 ['typeTest' => 5.32],
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new ObjectParameter('typeTest', 'typeTest', [ParameterType::FLOAT])]
                 )
             ],
@@ -207,12 +210,14 @@ class JsonGeneratorTest extends TestCase
                 ['typeTest' => true],
                 new DecodedObject(
                     'TestObject',
+                    'TestObject',
                     ['typeTest' => new ObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN])]
                 )
             ],
             'boolean false' => [
                 ['typeTest' => false],
                 new DecodedObject(
+                    'TestObject',
                     'TestObject',
                     ['typeTest' => new ObjectParameter('typeTest', 'typeTest', [ParameterType::BOOLEAN])]
                 )

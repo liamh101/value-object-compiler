@@ -7,10 +7,10 @@ use LiamH\ValueObjectCompiler\Enum\ParameterType;
 readonly class DecodedObject
 {
     /**
-     * @param string $name
      * @param ObjectParameter[] $parameters
      */
     public function __construct(
+        public string $originalName,
         public string $name,
         public array $parameters,
     ) {

@@ -53,6 +53,16 @@ class JsonDecodedObjectService extends DecodedObjectService
         return HydrationParameter::ARRAY;
     }
 
+    public function getToSourceDefinition(DecodedObject $decodedObject): string
+    {
+        return '';
+    }
+
+    public function getToSourceLogic(DecodedObject $decodedObject): string
+    {
+        return 'return (array)$this;' . PHP_EOL;
+    }
+
     protected function generateParameterHydration(ObjectParameter $objectParameter, bool $optionalParameter): string
     {
         if ($objectParameter->subObject && $objectParameter->hasType(ParameterType::OBJECT)) {

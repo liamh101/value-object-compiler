@@ -10,6 +10,8 @@ use Symfony\Component\Process\Process;
 class FileService
 {
     private const STUB_LOCATION = '/../Stub/';
+    private const SOURCE_FILE_NAME = 'source.stub';
+    private const VALUE_OBJECT_FILE_NAME = 'valueObject.stub';
 
     /** @var string[] */
     private array $cacheFiles = [];
@@ -27,7 +29,15 @@ class FileService
         string $hydrationValidation,
         string $hydrationLogic,
         string $hydrationParameter,
+        string $toSourceDefinition,
+        string $toSourceLogic,
     ): string {
+        $valueObjectFile = str_replace(
+            '{{IncludeSource}}',
+            ($toSourceDefinition || $toSourceLogic) ? $this->getFile(self::SOURCE_FILE_NAME) : '',
+            $this->getFile(self::VALUE_OBJECT_FILE_NAME)
+        );
+
         return str_replace(
             [
                 '{{ClassName}}',
@@ -36,6 +46,8 @@ class FileService
                 '{{HydrationValidation}}',
                 '{{HydrationLogic}}',
                 '{{HydrationParameter}}',
+                '{{ToSourceDefinition}}',
+                '{{ToSourceLogic}}',
             ],
             [
                 $className,
@@ -43,9 +55,11 @@ class FileService
                 $parameters,
                 $hydrationValidation,
                 $hydrationLogic,
-                $hydrationParameter
+                $hydrationParameter,
+                $toSourceDefinition,
+                $toSourceLogic,
             ],
-            $this->getValueObjectFile()
+            $valueObjectFile
         );
     }
 
@@ -84,19 +98,19 @@ class FileService
         return true;
     }
 
-    private function getValueObjectFile(): string
+    private function getFile(string $name): string
     {
-        if (isset($this->cacheFiles['valueObject'])) {
-            return $this->cacheFiles['valueObject'];
+        if (isset($this->cacheFiles[$name])) {
+            return $this->cacheFiles[$name];
         }
 
-        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . 'valueObject.stub');
+        $contents = file_get_contents(__DIR__ . self::STUB_LOCATION . $name);
 
         if (!$contents) {
-            throw FileException::fileNotFound('valueObject.stub');
+            throw FileException::fileNotFound($name);
         }
 
-        $this->cacheFiles['valueObject'] = $contents;
+        $this->cacheFiles[$name] = $contents;
 
         return $contents;
     }
