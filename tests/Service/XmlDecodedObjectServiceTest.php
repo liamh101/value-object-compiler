@@ -199,6 +199,8 @@ class XmlDecodedObjectServiceTest extends TestCase
         $defaultReturn = PHP_EOL . 'return $data;' . PHP_EOL;
 
         $attribute = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING], [], true);
+        $nullableAttribute = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::NULL], [], true);
+
         $scalarParameter = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING]);
         $objectParameter = new XmlObjectParameter('objectType', 'objectType', [ParameterType::OBJECT], [], false, new DecodedObject('Object', 'Object', [$scalarParameter]));
         $scalarArray = new XmlObjectParameter('stringType', 'stringType', [ParameterType::ARRAY], [ParameterType::STRING]);
@@ -224,6 +226,10 @@ class XmlDecodedObjectServiceTest extends TestCase
             'object array' => [
                 new DecodedObject('test', 'test', [$objectArray]),
                 'foreach($this->objectType as $value) {$item = $data->addChild(\'objectType\');' . PHP_EOL . '$value->toSource($item);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+            'nullable type' => [
+                new DecodedObject('test', 'test', [$nullableAttribute]),
+                'if ($this->stringType) {' . PHP_EOL . '$data->addAttribute(\'stringType\', $this->stringType);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
             ],
         ];
     }
