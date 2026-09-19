@@ -10,7 +10,7 @@ class FileExceptionTest extends TestCase
     public function testFileNotFound(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('File TestFile.json could not be found.');
+        $this->expectExceptionMessageIsOrContains('File TestFile.json could not be found.');
 
         throw FileException::fileNotFound('TestFile.json');
     }
@@ -18,7 +18,7 @@ class FileExceptionTest extends TestCase
     public function testCannotWriteFile(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Cannot create file TestFile.php');
+        $this->expectExceptionMessageIsOrContains('Cannot create file TestFile.php');
 
         throw FileException::cannotWriteFile('TestFile.php');
     }
@@ -26,7 +26,7 @@ class FileExceptionTest extends TestCase
     public function testCouldNotFormatFile(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Could not format file TestFile.php: Invalid PHP');
+        $this->expectExceptionMessageIsOrContains('Could not format file TestFile.php: Invalid PHP');
 
         throw FileException::couldNotFormatFile('TestFile.php', 'Invalid PHP');
     }

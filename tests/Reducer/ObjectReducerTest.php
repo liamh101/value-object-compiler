@@ -18,7 +18,7 @@ class ObjectReducerTest extends TestCase
     public function testBelowMinimumObjects(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Not enough Objects to reduce');
+        $this->expectExceptionMessageIsOrContains('Not enough Objects to reduce');
 
         $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', [])];
 
@@ -28,7 +28,7 @@ class ObjectReducerTest extends TestCase
     public function testPassInvalidIntType(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Object reducer requires DecodedObject. integer passed');
+        $this->expectExceptionMessageIsOrContains('Object reducer requires DecodedObject. integer passed');
 
         $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', []), 1];
 
@@ -38,7 +38,7 @@ class ObjectReducerTest extends TestCase
     public function testPassInvalidObjectType(): void
     {
         $this->expectException(ObjectReducerException::class);
-        $this->expectExceptionMessage('Object reducer requires DecodedObject. LiamH\ValueObjectCompiler\ValueObject\GeneratedFile passed');
+        $this->expectExceptionMessageIsOrContains('Object reducer requires DecodedObject. LiamH\ValueObjectCompiler\ValueObject\GeneratedFile passed');
 
         $decodedObjectArray = [new DecodedObject('Hello World', 'Hello World', []), new GeneratedFile('Test', 'hello', FileExtension::PHP)];
 

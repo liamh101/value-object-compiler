@@ -16,7 +16,7 @@ class FileServiceTest extends TestCase
     public function testInvalidOutputDir(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Invalid output directory provided');
+        $this->expectExceptionMessageIsOrContains('Invalid output directory provided');
 
         new FileService('Invalid');
     }
@@ -114,7 +114,7 @@ readonly class {{ClassName}}
     public function testWriteInvalidContents(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('Cannot create file TestFile');
+        $this->expectExceptionMessageIsOrContains('Cannot create file TestFile');
         $file = new GeneratedFile('TestFile', 'Hello world!', FileExtension::PHP);
 
         $service = new FileService('./nonexistantFolder/');
@@ -151,7 +151,7 @@ readonly class {{ClassName}}
     public function testGetFileContentsInvalid(): void
     {
         $this->expectException(FileException::class);
-        $this->expectExceptionMessage('File ./tests/TestFiles/missingTestFile.txt could not be found.');
+        $this->expectExceptionMessageIsOrContains('File ./tests/TestFiles/missingTestFile.txt could not be found.');
         $service = $this->createService();
 
         $service->getFileContentsFromPath('./tests/TestFiles/missingTestFile.txt');
