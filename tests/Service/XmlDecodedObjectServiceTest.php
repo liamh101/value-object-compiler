@@ -198,38 +198,44 @@ class XmlDecodedObjectServiceTest extends TestCase
     {
         $defaultReturn = PHP_EOL . 'return $data;' . PHP_EOL;
 
-        $attribute = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING], [], true);
-        $nullableAttribute = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING, ParameterType::NULL], [], true);
+        $attribute = new XmlObjectParameter('string_type', 'stringType', [ParameterType::STRING], [], true);
+        $nullableAttribute = new XmlObjectParameter('string_type', 'stringType', [ParameterType::STRING, ParameterType::NULL], [], true);
 
-        $scalarParameter = new XmlObjectParameter('stringType', 'stringType', [ParameterType::STRING]);
-        $objectParameter = new XmlObjectParameter('objectType', 'objectType', [ParameterType::OBJECT], [], false, new DecodedObject('Object', 'Object', [$scalarParameter]));
-        $scalarArray = new XmlObjectParameter('stringType', 'stringType', [ParameterType::ARRAY], [ParameterType::STRING]);
-        $objectArray = new XmlObjectParameter('objectType', 'objectType', [ParameterType::ARRAY], [new DecodedObject('Object', 'Object', [$scalarParameter])]);
+        $scalarParameter = new XmlObjectParameter('string_type', 'stringType', [ParameterType::STRING]);
+        $nullableScalarParameter = new XmlObjectParameter('float_type', 'floatType', [ParameterType::FLOAT, ParameterType::NULL]);
+
+        $objectParameter = new XmlObjectParameter('object_type', 'objectType', [ParameterType::OBJECT], [], false, new DecodedObject('Object', 'Object', [$scalarParameter]));
+        $scalarArray = new XmlObjectParameter('string_type', 'stringType', [ParameterType::ARRAY], [ParameterType::STRING]);
+        $objectArray = new XmlObjectParameter('object_type', 'objectType', [ParameterType::ARRAY], [new DecodedObject('Object', 'Object', [$scalarParameter])]);
 
         return [
             'attribute' => [
                 new DecodedObject('test', 'test', [$attribute]),
-                '$data->addAttribute(\'stringType\', $this->stringType);' . PHP_EOL . $defaultReturn,
+                '$data->addAttribute(\'string_type\', $this->stringType);' . PHP_EOL . $defaultReturn,
             ],
             'scalar parameter' => [
                 new DecodedObject('test', 'test', [$scalarParameter]),
-                '$data->addChild(\'stringType\', $this->stringType);' . PHP_EOL . $defaultReturn,
+                '$data->addChild(\'string_type\', $this->stringType);' . PHP_EOL . $defaultReturn,
             ],
             'object parameter' => [
                 new DecodedObject('test', 'test', [$objectParameter]),
-                '$item = $data->addChild(\'objectType\');' . PHP_EOL . '$this->objectType->toSource($item);' . PHP_EOL . $defaultReturn,
+                '$item = $data->addChild(\'object_type\');' . PHP_EOL . '$this->objectType->toSource($item);' . PHP_EOL . $defaultReturn,
             ],
             'scalar array' => [
                 new DecodedObject('test', 'test', [$scalarArray]),
-                'foreach($this->stringType as $value) {$data->addChild(\'stringType\', $value);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+                'foreach($this->stringType as $value) {$data->addChild(\'string_type\', $value);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
             ],
             'object array' => [
                 new DecodedObject('test', 'test', [$objectArray]),
-                'foreach($this->objectType as $value) {$item = $data->addChild(\'objectType\');' . PHP_EOL . '$value->toSource($item);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+                'foreach($this->objectType as $value) {$item = $data->addChild(\'object_type\');' . PHP_EOL . '$value->toSource($item);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
             ],
             'nullable type' => [
                 new DecodedObject('test', 'test', [$nullableAttribute]),
-                'if ($this->stringType) {' . PHP_EOL . '$data->addAttribute(\'stringType\', $this->stringType);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+                'if ($this->stringType) {' . PHP_EOL . '$data->addAttribute(\'string_type\', $this->stringType);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+            'multiple nullable type' => [
+                new DecodedObject('test', 'test', [$nullableAttribute, $nullableScalarParameter]),
+                'if ($this->stringType) {' . PHP_EOL . '$data->addAttribute(\'string_type\', $this->stringType);' . PHP_EOL . '}' . PHP_EOL . 'if ($this->floatType) {' . PHP_EOL . '$data->addChild(\'float_type\', $this->floatType);' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
             ],
         ];
     }
