@@ -60,7 +60,44 @@ class JsonDecodedObjectService extends DecodedObjectService
 
     public function getToSourceLogic(DecodedObject $decodedObject): string
     {
-        return 'return (array)$this;' . PHP_EOL;
+        $output = '$data = [];' . PHP_EOL;
+        $optional = false;
+
+        foreach ($decodedObject->parameters as $parameter) {
+            if ($optional) {
+                $output .= '}' . PHP_EOL;
+            }
+
+            $optional = $parameter->hasType(ParameterType::NULL) && !$parameter->hasType(ParameterType::ARRAY);
+
+            if ($optional) {
+                $output .= 'if ($this->' . $parameter->formattedName . ') {' . PHP_EOL;
+            }
+
+            $isObject = $parameter->hasObject();
+
+            if (!$isObject) {
+                $output .= '$data[\'' . $parameter->originalName . '\'] = $this->' . $parameter->formattedName . ';' . PHP_EOL;
+                continue;
+            }
+
+
+            if (!$parameter->hasType(ParameterType::ARRAY)) {
+                $output .= '$data[\'' . $parameter->originalName . '\'] = ' . '$this->' . $parameter->formattedName . '->toSource();' . PHP_EOL;
+                continue;
+            }
+
+            $output .= '$data[\'' . $parameter->originalName . '\'] = [];' . PHP_EOL;
+            $output .= 'foreach($this->' . $parameter->formattedName . ' as $value) {';
+            $output .= '$data[\'' . $parameter->originalName . '\'][] = ' . '$value->toSource();' . PHP_EOL;
+            $output .= '}' . PHP_EOL;
+        }
+
+        if ($optional) {
+            $output .= '}' . PHP_EOL;
+        }
+
+        return $output . PHP_EOL . 'return $data;' . PHP_EOL;
     }
 
     protected function generateParameterHydration(ObjectParameter $objectParameter, bool $optionalParameter): string
