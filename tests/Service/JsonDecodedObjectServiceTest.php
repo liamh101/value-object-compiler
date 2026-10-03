@@ -200,6 +200,10 @@ class JsonDecodedObjectServiceTest extends TestCase
                 new DecodedObject('test', 'test', [$nullableScalarParameter]),
                 $defaultStart . 'if ($this->floatType) {' . PHP_EOL . '$data[\'float_type\'] = $this->floatType;' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
             ],
+            'multiple types' => [
+                new DecodedObject('test', 'test', [$nullableScalarParameter, $scalarParameter]),
+                $defaultStart . 'if ($this->floatType) {' . PHP_EOL . '$data[\'float_type\'] = $this->floatType;' . PHP_EOL . '}' . PHP_EOL . '$data[\'string_type\'] = $this->stringType;' . PHP_EOL . $defaultReturn,
+            ]
         ];
     }
 
