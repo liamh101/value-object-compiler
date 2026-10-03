@@ -207,7 +207,6 @@ class JsonDecodedObjectServiceTest extends TestCase
         ];
     }
 
-
     private function createService(): JsonDecodedObjectService
     {
         return new JsonDecodedObjectService();
