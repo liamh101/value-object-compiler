@@ -158,15 +158,51 @@ class JsonDecodedObjectServiceTest extends TestCase
         );
     }
 
-    public function testGetToSourceLogic(): void
+    #[DataProvider('sourceProvider')]
+    public function testGetToSourceLogic(DecodedObject $object, string $expected): void
     {
-        $decodedObject = new DecodedObject('Object', 'Object', []);
-
         self::assertSame(
-            'return (array)$this;' . PHP_EOL,
-            $this->createService()->getToSourceLogic($decodedObject)
+            $expected,
+            $this->createService()->getToSourceLogic($object)
         );
     }
+
+    public static function sourceProvider(): array
+    {
+        $defaultStart = '$data = [];' . PHP_EOL;
+        $defaultReturn = PHP_EOL . 'return $data;' . PHP_EOL;
+
+        $scalarParameter = new ObjectParameter('string_type', 'stringType', [ParameterType::STRING]);
+        $nullableScalarParameter = new ObjectParameter('float_type', 'floatType', [ParameterType::FLOAT, ParameterType::NULL]);
+
+        $objectParameter = new ObjectParameter('object_type', 'objectType', [ParameterType::OBJECT], [], new DecodedObject('Object', 'Object', [$scalarParameter]));
+        $scalarArray = new ObjectParameter('string_type', 'stringType', [ParameterType::ARRAY], [ParameterType::STRING]);
+        $objectArray = new ObjectParameter('object_type', 'objectType', [ParameterType::ARRAY], [new DecodedObject('Object', 'Object', [$scalarParameter])]);
+
+        return [
+            'parameter' => [
+                new DecodedObject('test', 'test', [$scalarParameter]),
+                $defaultStart . '$data[\'string_type\'] = $this->stringType;' . PHP_EOL . $defaultReturn,
+            ],
+            'object parameter' => [
+                new DecodedObject('test', 'test', [$objectParameter]),
+                $defaultStart . '$data[\'object_type\'] = $this->objectType->toSource();' . PHP_EOL . $defaultReturn,
+            ],
+            'scalar array' => [
+                new DecodedObject('test', 'test', [$scalarArray]),
+                $defaultStart . '$data[\'string_type\'] = $this->stringType;' . PHP_EOL . $defaultReturn,
+            ],
+            'object array' => [
+                new DecodedObject('test', 'test', [$objectArray]),
+                $defaultStart . '$data[\'object_type\'] = [];' . PHP_EOL . 'foreach($this->objectType as $value) {$data[\'object_type\'][] = $value->toSource();' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+            'nullable type' => [
+                new DecodedObject('test', 'test', [$nullableScalarParameter]),
+                $defaultStart . 'if ($this->floatType) {' . PHP_EOL . '$data[\'float_type\'] = $this->floatType;' . PHP_EOL . '}' . PHP_EOL . $defaultReturn,
+            ],
+        ];
+    }
+
 
     private function createService(): JsonDecodedObjectService
     {
